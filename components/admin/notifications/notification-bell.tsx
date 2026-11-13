@@ -150,7 +150,7 @@ export function NotificationBell() {
             )}
             <div className="border-t border-line p-2">
               <Link
-                href="/admin/notifications"
+                href="/dentaladmincalicut/notifications"
                 onClick={() => setOpen(false)}
                 className="block rounded-xl px-3 py-2 text-center text-sm font-semibold text-navy-800 hover:bg-muted"
               >

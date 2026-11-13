@@ -71,7 +71,7 @@ export function DoctorForm({
       if (res.ok) {
         setImpact(null);
         toast.success(res.message ?? "Saved");
-        router.push(`/admin/doctors/${res.data.id}`);
+        router.push(`/dentaladmincalicut/doctors/${res.data.id}`);
         router.refresh();
         return;
       }
@@ -169,7 +169,7 @@ export function DoctorForm({
               {services.length === 0 ? (
                 <p className="text-sm text-body">
                   No services exist yet.{" "}
-                  <a href="/admin/services/new" className="font-semibold text-brand-700 underline">
+                  <a href="/dentaladmincalicut/services/new" className="font-semibold text-brand-700 underline">
                     Create a service
                   </a>{" "}
                   first.
@@ -340,7 +340,7 @@ export function DoctorForm({
 
       <div className="sticky bottom-3 z-20 rounded-2xl border border-line bg-white/90 shadow-lift backdrop-blur-md">
         <div className="flex items-center justify-end gap-2 px-4 py-3">
-          <ButtonLink href={isEdit ? `/admin/doctors/${defaultValues.id}` : "/admin/doctors"} variant="secondary">
+          <ButtonLink href={isEdit ? `/dentaladmincalicut/doctors/${defaultValues.id}` : "/dentaladmincalicut/doctors"} variant="secondary">
             Cancel
           </ButtonLink>
           <Button type="submit" variant="navy" loading={saving}>

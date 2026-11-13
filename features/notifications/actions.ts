@@ -31,7 +31,7 @@ export async function markNotificationsRead(ids: string[] | null): Promise<Actio
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("admin_mark_notifications_read", parsed.data ? { p_ids: parsed.data } : {});
   if (error) return { ok: false, message: "Could not update notifications. Please try again." };
-  revalidatePath("/admin/notifications");
-  revalidatePath("/admin/dashboard");
+  revalidatePath("/dentaladmincalicut/notifications");
+  revalidatePath("/dentaladmincalicut/dashboard");
   return { ok: true, data: { updated: data ?? 0 } };
 }

@@ -30,7 +30,7 @@ export function AvailabilityToolbar({
       from: next.from ?? from,
       days: String(next.days ?? days),
     });
-    startTransition(() => router.push(`/admin/availability?${qs}`, { scroll: false }));
+    startTransition(() => router.push(`/dentaladmincalicut/availability?${qs}`, { scroll: false }));
   }
 
   const navBtn =

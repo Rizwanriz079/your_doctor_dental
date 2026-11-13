@@ -39,7 +39,7 @@ export function FinishSetup({ email, signedIn = false }: { email: string; signed
         Finish setup and open dashboard
       </Button>
       {signedIn && (
-        <form action={signOut.bind(null, "/admin/setup")} className="mt-3">
+        <form action={signOut.bind(null, "/dentaladmincalicut/setup")} className="mt-3">
           <button type="submit" className="text-sm font-semibold text-brand-700 hover:underline">
             Use a different account
           </button>

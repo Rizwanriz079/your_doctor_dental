@@ -59,7 +59,7 @@ export function ServiceForm({
       const res = await saveService(values);
       if (res.ok) {
         toast.success(res.message ?? "Saved");
-        router.push("/admin/services");
+        router.push("/dentaladmincalicut/services");
         router.refresh();
         return;
       }
@@ -249,7 +249,7 @@ export function ServiceForm({
 
       <div className="sticky bottom-3 z-20 rounded-2xl border border-line bg-white/90 shadow-lift backdrop-blur-md">
         <div className="flex items-center justify-end gap-2 px-4 py-3">
-          <ButtonLink href="/admin/services" variant="secondary">
+          <ButtonLink href="/dentaladmincalicut/services" variant="secondary">
             Cancel
           </ButtonLink>
           <Button type="submit" variant="navy" loading={saving}>

@@ -89,7 +89,7 @@ export async function signOut(to?: string | FormData): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
   refreshAccountViews();
-  redirect(to === "/admin/setup" ? to : "/");
+  redirect(to === "/dentaladmincalicut/setup" ? to : "/");
 }
 
 export async function requestPasswordReset(input: unknown): Promise<ActionResult> {
@@ -142,8 +142,8 @@ export async function cancelMyAppointment(input: unknown): Promise<ActionResult>
   const res = data as { ok: boolean; message?: string } | null;
   if (error || !res?.ok) return { ok: false, message: res?.message ?? "The booking could not be cancelled. Please contact the clinic." };
   revalidatePath("/my-appointments");
-  revalidatePath("/admin/appointments", "layout");
-  revalidatePath("/admin/dashboard");
+  revalidatePath("/dentaladmincalicut/appointments", "layout");
+  revalidatePath("/dentaladmincalicut/dashboard");
   return { ok: true, message: "Your appointment has been cancelled." };
 }
 

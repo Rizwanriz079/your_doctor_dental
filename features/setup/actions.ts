@@ -59,14 +59,14 @@ export async function createFirstAdmin(input: unknown): Promise<ActionResult> {
   if (!signIn.error) {
     const res = await claim(fullName);
     if (!res.ok) return res;
-    redirect("/admin/dashboard");
+    redirect("/dentaladmincalicut/dashboard");
   }
   if (signIn.error.code === "email_not_confirmed") {
     // Account exists but was never confirmed: send a fresh confirmation link.
     const resent = await supabase.auth.resend({
       type: "signup",
       email,
-      options: { emailRedirectTo: `${await origin()}/auth/callback?next=/admin/setup/complete` },
+      options: { emailRedirectTo: `${await origin()}/auth/callback?next=/dentaladmincalicut/setup/complete` },
     });
     if (resent.error?.code === "over_email_send_rate_limit") {
       return { ok: false, message: "Too many emails sent. Please wait a minute and try again." };
@@ -79,7 +79,7 @@ export async function createFirstAdmin(input: unknown): Promise<ActionResult> {
     password,
     options: {
       data: { full_name: fullName },
-      emailRedirectTo: `${await origin()}/auth/callback?next=/admin/setup/complete`,
+      emailRedirectTo: `${await origin()}/auth/callback?next=/dentaladmincalicut/setup/complete`,
     },
   });
   if (error) {
@@ -92,12 +92,12 @@ export async function createFirstAdmin(input: unknown): Promise<ActionResult> {
   if (!data.session) return { ok: true, message: "check_email" }; // "Confirm email" is on in Supabase
   const res = await claim(fullName);
   if (!res.ok) return res;
-  redirect("/admin/dashboard");
+  redirect("/dentaladmincalicut/dashboard");
 }
 
 /** Called after the confirmation link signs the new admin in. */
 export async function finishFirstAdmin(): Promise<ActionResult> {
   const res = await claim();
   if (!res.ok) return res;
-  redirect("/admin/dashboard");
+  redirect("/dentaladmincalicut/dashboard");
 }

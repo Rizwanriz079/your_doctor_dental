@@ -37,7 +37,7 @@ export async function updatePatientContact(input: z.input<typeof patientContactS
     return { ok: false, message: "The patient details could not be saved. Please try again." };
   }
   if (!data) return { ok: false, message: "Patient not found." };
-  revalidatePath("/admin/patients");
-  revalidatePath(`/admin/patients/${id}`);
+  revalidatePath("/dentaladmincalicut/patients");
+  revalidatePath(`/dentaladmincalicut/patients/${id}`);
   return { ok: true, message: "Patient details updated." };
 }

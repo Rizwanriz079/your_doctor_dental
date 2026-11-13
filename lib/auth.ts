@@ -44,7 +44,7 @@ function avatarFromClaims(meta: unknown): string | null {
 /** Use at the top of every admin page / server action. Redirects when not authorised. */
 export async function requireAdmin(): Promise<AdminSession> {
   const admin = await getAdmin();
-  if (!admin) redirect("/admin/login");
+  if (!admin) redirect("/dentaladmincalicut/login");
   return admin;
 }
 

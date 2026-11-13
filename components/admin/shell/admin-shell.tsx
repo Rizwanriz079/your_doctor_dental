@@ -34,15 +34,15 @@ import { BrandMark } from "./brand-mark";
 type NavItem = { href: string; label: string; icon: LucideIcon; badge?: "unread" };
 
 const NAV: NavItem[] = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
-  { href: "/admin/doctors", label: "Doctors", icon: Stethoscope },
-  { href: "/admin/availability", label: "Availability", icon: CalendarClock },
-  { href: "/admin/patients", label: "Patients", icon: Users },
-  { href: "/admin/services", label: "Services", icon: Sparkles },
-  { href: "/admin/notifications", label: "Notifications", icon: Bell, badge: "unread" },
-  { href: "/admin/content", label: "Content", icon: PanelsTopLeft },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/dentaladmincalicut/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dentaladmincalicut/appointments", label: "Appointments", icon: CalendarDays },
+  { href: "/dentaladmincalicut/doctors", label: "Doctors", icon: Stethoscope },
+  { href: "/dentaladmincalicut/availability", label: "Availability", icon: CalendarClock },
+  { href: "/dentaladmincalicut/patients", label: "Patients", icon: Users },
+  { href: "/dentaladmincalicut/services", label: "Services", icon: Sparkles },
+  { href: "/dentaladmincalicut/notifications", label: "Notifications", icon: Bell, badge: "unread" },
+  { href: "/dentaladmincalicut/content", label: "Content", icon: PanelsTopLeft },
+  { href: "/dentaladmincalicut/settings", label: "Settings", icon: Settings },
 ];
 
 type ShellProps = {
@@ -170,13 +170,13 @@ function ShellInner({
             >
               <Menu className="size-5" aria-hidden />
             </button>
-            <Link href="/admin/dashboard" className="flex min-w-0 items-center gap-2 lg:hidden">
+            <Link href="/dentaladmincalicut/dashboard" className="flex min-w-0 items-center gap-2 lg:hidden">
               <BrandMark logoPath={logoPath} className="size-8" />
               <span className="hidden truncate font-bold text-navy-800 sm:inline">{clinicName}</span>
             </Link>
             <div className="ml-auto flex items-center gap-2 sm:gap-3">
               <Link
-                href="/admin/settings"
+                href="/dentaladmincalicut/settings"
                 className="hidden size-11 place-items-center rounded-2xl bg-white text-navy-800 ring-1 ring-line transition-colors hover:bg-muted sm:grid"
                 aria-label="Clinic settings"
               >
@@ -211,7 +211,7 @@ function SidebarContent({
   const { unread } = useNotifications();
   return (
     <>
-      <Link href="/admin/dashboard" className="flex items-center gap-3 px-6 pb-6 pt-7">
+      <Link href="/dentaladmincalicut/dashboard" className="flex items-center gap-3 px-6 pb-6 pt-7">
         <BrandMark logoPath={logoPath} />
         <span className="min-w-0 truncate text-lg font-bold tracking-tight text-navy-800">{clinicName}</span>
       </Link>
@@ -332,7 +332,7 @@ function UserMenu({ admin }: { admin: ShellProps["admin"] }) {
             </div>
             <div className="p-1.5">
               <Link
-                href="/admin/settings"
+                href="/dentaladmincalicut/settings"
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-navy-800 hover:bg-muted"
               >

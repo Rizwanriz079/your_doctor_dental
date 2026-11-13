@@ -17,9 +17,9 @@ const date = z.iso.date("Choose a valid date.");
 const time = z.string().regex(/^\d{2}:\d{2}$/, "Use HH:MM");
 
 function revalidateAll() {
-  revalidatePath("/admin/availability");
-  revalidatePath("/admin/doctors/[id]", "page");
-  revalidatePath("/admin/dashboard");
+  revalidatePath("/dentaladmincalicut/availability");
+  revalidatePath("/dentaladmincalicut/doctors/[id]", "page");
+  revalidatePath("/dentaladmincalicut/dashboard");
   revalidatePath("/doctors/[slug]", "page");
   revalidatePath("/book-appointment");
 }

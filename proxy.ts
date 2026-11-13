@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Refreshes the Supabase session cookie and performs an optimistic redirect for
- * /admin routes. This is NOT the security boundary: the admin layout re-checks the
+ * /dentaladmincalicut routes. This is NOT the security boundary: the admin layout re-checks the
  * role on the server and every data operation is protected by RLS / is_admin().
  */
 export async function proxy(request: NextRequest) {
@@ -37,13 +37,13 @@ export async function proxy(request: NextRequest) {
   const user = data?.claims?.sub ? { id: data.claims.sub } : null;
 
   const { pathname } = request.nextUrl;
-  const isAdminArea = pathname.startsWith("/admin");
-  // Pages under /admin that must open without a session: login and the first-run setup wizard.
-  const isAdminLogin = pathname === "/admin/login" || pathname === "/admin/setup";
+  const isAdminArea = pathname.startsWith("/dentaladmincalicut");
+  // Pages under /dentaladmincalicut that must open without a session: login and the first-run setup wizard.
+  const isAdminLogin = pathname === "/dentaladmincalicut/login" || pathname === "/dentaladmincalicut/setup";
 
   if (isAdminArea && !isAdminLogin && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/admin/login";
+    url.pathname = "/dentaladmincalicut/login";
     url.search = `?next=${encodeURIComponent(pathname)}`;
     return NextResponse.redirect(url);
   }

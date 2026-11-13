@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 type StatKey = "total" | "today" | "pending" | "confirmed" | "completed" | "patients" | "activeDoctors";
 
 const CARDS: { key: StatKey; label: string; icon: LucideIcon; href: string; tone: string }[] = [
-  { key: "today", label: "Today's appointments", icon: CalendarDays, href: "/admin/appointments?range=today", tone: "bg-brand-50 text-brand-700" },
-  { key: "pending", label: "Pending", icon: Clock3, href: "/admin/appointments?status=pending", tone: "bg-danger-50 text-danger-700" },
-  { key: "confirmed", label: "Confirmed", icon: CalendarCheck2, href: "/admin/appointments?status=confirmed", tone: "bg-brand-50 text-brand-700" },
-  { key: "completed", label: "Completed", icon: CircleCheckBig, href: "/admin/appointments?status=completed", tone: "bg-success-50 text-success-700" },
-  { key: "total", label: "Total appointments", icon: CalendarRange, href: "/admin/appointments", tone: "bg-navy-50 text-navy-800" },
-  { key: "patients", label: "Total patients", icon: Users, href: "/admin/patients", tone: "bg-navy-50 text-navy-800" },
-  { key: "activeDoctors", label: "Active doctors", icon: Stethoscope, href: "/admin/doctors?status=active", tone: "bg-brand-50 text-brand-700" },
+  { key: "today", label: "Today's appointments", icon: CalendarDays, href: "/dentaladmincalicut/appointments?range=today", tone: "bg-brand-50 text-brand-700" },
+  { key: "pending", label: "Pending", icon: Clock3, href: "/dentaladmincalicut/appointments?status=pending", tone: "bg-danger-50 text-danger-700" },
+  { key: "confirmed", label: "Confirmed", icon: CalendarCheck2, href: "/dentaladmincalicut/appointments?status=confirmed", tone: "bg-brand-50 text-brand-700" },
+  { key: "completed", label: "Completed", icon: CircleCheckBig, href: "/dentaladmincalicut/appointments?status=completed", tone: "bg-success-50 text-success-700" },
+  { key: "total", label: "Total appointments", icon: CalendarRange, href: "/dentaladmincalicut/appointments", tone: "bg-navy-50 text-navy-800" },
+  { key: "patients", label: "Total patients", icon: Users, href: "/dentaladmincalicut/patients", tone: "bg-navy-50 text-navy-800" },
+  { key: "activeDoctors", label: "Active doctors", icon: Stethoscope, href: "/dentaladmincalicut/doctors?status=active", tone: "bg-brand-50 text-brand-700" },
 ];
 
 export function StatCards({ stats }: { stats: Record<StatKey, number> }) {

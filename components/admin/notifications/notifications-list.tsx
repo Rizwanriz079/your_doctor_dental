@@ -24,7 +24,7 @@ export function NotificationsList({ items, unreadOnly }: { items: Notification[]
         description={unreadOnly ? "You're all caught up." : "When a patient books an appointment, you'll be notified here instantly."}
         action={
           unreadOnly ? (
-            <Link href="/admin/notifications" className="text-sm font-semibold text-brand-700 hover:underline">
+            <Link href="/dentaladmincalicut/notifications" className="text-sm font-semibold text-brand-700 hover:underline">
               View all notifications
             </Link>
           ) : undefined

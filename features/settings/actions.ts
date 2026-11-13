@@ -38,7 +38,7 @@ export async function saveBookingSettings(input: BookingSettingsValues): Promise
 
   const { error } = await supabase.from("clinic_settings").update(parsed.data).eq("id", 1);
   if (error) return { ok: false, message: "Settings could not be saved. Please try again." };
-  revalidatePath("/admin/settings");
+  revalidatePath("/dentaladmincalicut/settings");
   revalidatePath("/", "layout");
   return { ok: true, message: "Booking settings saved" };
 }
@@ -73,6 +73,6 @@ export async function updateAdminProfile(input: { fullName: string; avatarPath: 
   // Re-issue the session so the new photo/name are in the signed-in token straight away.
   await supabase.auth.refreshSession();
 
-  revalidatePath("/admin", "layout");
+  revalidatePath("/dentaladmincalicut", "layout");
   return { ok: true, message: "Profile updated" };
 }

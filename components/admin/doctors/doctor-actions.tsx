@@ -155,10 +155,10 @@ export function DoctorActions({ doctor, compact = true, afterDelete }: { doctor:
     <div className="flex items-center justify-end gap-0.5">
       {compact && (
         <>
-          <Link href={`/admin/doctors/${doctor.id}`} className={iconBtn} aria-label={`View ${doctor.full_name}`} title="View">
+          <Link href={`/dentaladmincalicut/doctors/${doctor.id}`} className={iconBtn} aria-label={`View ${doctor.full_name}`} title="View">
             <Eye className="size-[18px]" aria-hidden />
           </Link>
-          <Link href={`/admin/doctors/${doctor.id}/edit`} className={iconBtn} aria-label={`Edit ${doctor.full_name}`} title="Edit">
+          <Link href={`/dentaladmincalicut/doctors/${doctor.id}/edit`} className={iconBtn} aria-label={`Edit ${doctor.full_name}`} title="Edit">
             <Pencil className="size-[18px]" aria-hidden />
           </Link>
         </>

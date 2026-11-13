@@ -10,9 +10,9 @@ import { doctorFormSchema, weekToSchedules, type DoctorFormValues, type DoctorIm
 type RpcResult = { ok: boolean; code?: string; message?: string; id?: string; impact?: DoctorImpact; upcoming?: number };
 
 function revalidateDoctorPaths(id?: string) {
-  revalidatePath("/admin/doctors");
-  if (id) revalidatePath(`/admin/doctors/${id}`);
-  revalidatePath("/admin/availability");
+  revalidatePath("/dentaladmincalicut/doctors");
+  if (id) revalidatePath(`/dentaladmincalicut/doctors/${id}`);
+  revalidatePath("/dentaladmincalicut/availability");
   revalidatePath("/");
   revalidatePath("/doctors");
   revalidatePath("/doctors/[slug]", "page");

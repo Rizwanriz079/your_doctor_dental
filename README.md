@@ -25,7 +25,7 @@ npm run dev             # http://localhost:3100
 | | |
 |---|---|
 | Public site | http://localhost:3100 |
-| Admin | http://localhost:3100/admin, login `admin@clinic.local` / `ChangeMe!2026` (**local seed only**) |
+| Admin | http://localhost:3100/dentaladmincalicut, login `admin@clinic.local` / `ChangeMe!2026` (**local seed only**) |
 | Supabase API | http://127.0.0.1:55421 |
 
 The ports are `554xx` rather than Supabase's default `543xx` so they don't clash with other local Supabase projects.
@@ -60,8 +60,8 @@ tests/db/              SQL-level integrity tests
 
 - The app **never uses the service-role key**. Every query runs as the visitor (anon) or the signed-in admin, so Row Level Security is always enforced.
 - Admin access is checked three times:
-  1. `proxy.ts` redirects signed-out users away from `/admin` (convenience only).
-  2. `app/admin/(panel)/layout.tsx` and each page and server action call `requireAdmin()` / `assertAdmin()`. These check `profiles.role = 'super_admin'` on the server.
+  1. `proxy.ts` redirects signed-out users away from `/dentaladmincalicut` (convenience only).
+  2. `app/dentaladmincalicut/(panel)/layout.tsx` and each page and server action call `requireAdmin()` / `assertAdmin()`. These check `profiles.role = 'super_admin'` on the server.
   3. Every table policy and every admin SQL function checks `is_admin()` in the database.
 - Public users cannot read appointments, patients, notifications, overrides or private doctor contact details. Booking happens only through the `book_appointment` function.
 - Roles cannot be changed from the client (a trigger guards `profiles.role`).

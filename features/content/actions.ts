@@ -26,7 +26,7 @@ function issuesToErrors(error: z.ZodError) {
 }
 
 function revalidatePublicSite() {
-  revalidatePath("/admin/content");
+  revalidatePath("/dentaladmincalicut/content");
   // Clinic name, contact details and footer appear on every public page.
   revalidatePath("/", "layout");
 }

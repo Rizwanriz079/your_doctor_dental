@@ -8,9 +8,9 @@ import type { ActionResult } from "@/lib/types";
 import { serviceFormSchema, type ServiceFormValues } from "./schema";
 
 function revalidateServicePaths(id?: string) {
-  revalidatePath("/admin/services");
-  if (id) revalidatePath(`/admin/services/${id}/edit`);
-  revalidatePath("/admin/doctors", "layout");
+  revalidatePath("/dentaladmincalicut/services");
+  if (id) revalidatePath(`/dentaladmincalicut/services/${id}/edit`);
+  revalidatePath("/dentaladmincalicut/doctors", "layout");
   revalidatePath("/");
   revalidatePath("/services");
   revalidatePath("/services/[slug]", "page");

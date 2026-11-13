@@ -110,7 +110,7 @@ export function AppointmentTable({ rows }: { rows: AppointmentRowView[] }) {
                   <div className="flex items-center justify-end gap-1">
                     {r.status === "pending" && <QuickConfirm id={r.id} />}
                     <Link
-                      href={`/admin/appointments/${r.id}`}
+                      href={`/dentaladmincalicut/appointments/${r.id}`}
                       className="grid size-9 place-items-center rounded-lg text-navy-700 transition-colors hover:bg-navy-50"
                       aria-label={`View appointment ${r.booking_reference}`}
                       title="View"
@@ -131,7 +131,7 @@ export function AppointmentTable({ rows }: { rows: AppointmentRowView[] }) {
           <li key={r.id} className="flex items-start gap-3 p-4">
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <Link href={`/admin/appointments/${r.id}`} className="font-semibold text-navy-800 break-anywhere hover:text-brand-700">
+                <Link href={`/dentaladmincalicut/appointments/${r.id}`} className="font-semibold text-navy-800 break-anywhere hover:text-brand-700">
                   {r.patient_name}
                 </Link>
                 <StatusBadge status={r.status} />
@@ -146,7 +146,7 @@ export function AppointmentTable({ rows }: { rows: AppointmentRowView[] }) {
             </div>
             <div className="flex shrink-0 flex-col items-center gap-1">
               <Link
-                href={`/admin/appointments/${r.id}`}
+                href={`/dentaladmincalicut/appointments/${r.id}`}
                 className="grid size-10 place-items-center rounded-lg text-navy-700 ring-1 ring-line hover:bg-navy-50"
                 aria-label={`View appointment ${r.booking_reference}`}
               >

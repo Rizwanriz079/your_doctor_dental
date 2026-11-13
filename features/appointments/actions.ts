@@ -12,10 +12,10 @@ type RpcResult = { ok: boolean; code?: string; message?: string };
 const idSchema = z.guid();
 
 function revalidateAppointment(id?: string) {
-  revalidatePath("/admin/appointments");
-  if (id) revalidatePath(`/admin/appointments/${id}`);
-  revalidatePath("/admin/dashboard");
-  revalidatePath("/admin/patients", "layout");
+  revalidatePath("/dentaladmincalicut/appointments");
+  if (id) revalidatePath(`/dentaladmincalicut/appointments/${id}`);
+  revalidatePath("/dentaladmincalicut/dashboard");
+  revalidatePath("/dentaladmincalicut/patients", "layout");
   // Public availability depends on bookings.
   revalidatePath("/book-appointment");
 }
@@ -124,7 +124,7 @@ export async function addAppointmentNote(input: z.input<typeof noteSchema>): Pro
   if (error) return { ok: false, message: "The note could not be saved." };
   const res = data as unknown as RpcResult;
   if (!res.ok) return { ok: false, message: res.message ?? "The note could not be saved." };
-  revalidatePath(`/admin/appointments/${parsed.data.id}`);
+  revalidatePath(`/dentaladmincalicut/appointments/${parsed.data.id}`);
   return { ok: true, message: "Note added." };
 }
 
@@ -148,6 +148,6 @@ export async function logWhatsAppMessage(input: z.input<typeof whatsappLogSchema
     p_note: `WhatsApp message opened for patient: ${MESSAGE_KIND_LABEL[parsed.data.kind]}.`,
   });
   if (error) return { ok: false, message: "Could not record the message." };
-  revalidatePath(`/admin/appointments/${parsed.data.id}`);
+  revalidatePath(`/dentaladmincalicut/appointments/${parsed.data.id}`);
   return { ok: true };
 }

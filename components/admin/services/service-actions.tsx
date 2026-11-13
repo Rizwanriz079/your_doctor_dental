@@ -56,7 +56,7 @@ export function ServiceActions({ service }: { service: { id: string; name: strin
   return (
     <div className="flex items-center justify-end gap-0.5">
       <Link
-        href={`/admin/services/${service.id}/edit`}
+        href={`/dentaladmincalicut/services/${service.id}/edit`}
         aria-label={`Edit ${service.name}`}
         title="Edit"
         className="grid size-9 place-items-center rounded-lg text-body transition-colors hover:bg-muted hover:text-navy-800"

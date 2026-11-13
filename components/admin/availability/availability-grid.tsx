@@ -265,7 +265,7 @@ function DayEditor({
             <ul className="mt-3 divide-y divide-warning-500/20 rounded-xl bg-white">
               {warning.affected.map((a) => (
                 <li key={a.id} className="flex flex-wrap justify-between gap-2 px-3 py-2">
-                  <a href={`/admin/appointments/${a.id}`} className="font-semibold text-navy-800 underline-offset-2 hover:underline">
+                  <a href={`/dentaladmincalicut/appointments/${a.id}`} className="font-semibold text-navy-800 underline-offset-2 hover:underline">
                     {a.reference}
                   </a>
                   <span>{a.patient_name}</span>

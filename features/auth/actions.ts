@@ -15,8 +15,8 @@ const GENERIC_ERROR = "The email or password is incorrect, or this account does 
 
 /** Only allow redirects to internal admin pages (prevents open redirects). */
 function safeNext(next: string | undefined) {
-  if (!next || !next.startsWith("/admin") || next.startsWith("//") || next.startsWith("/admin/login")) {
-    return "/admin/dashboard";
+  if (!next || !next.startsWith("/dentaladmincalicut") || next.startsWith("//") || next.startsWith("/dentaladmincalicut/login")) {
+    return "/dentaladmincalicut/dashboard";
   }
   return next;
 }
@@ -45,5 +45,5 @@ export async function signInAction(input: z.input<typeof signInSchema>): Promise
 export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect("/dentaladmincalicut/login");
 }
