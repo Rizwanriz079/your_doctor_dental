@@ -1,5 +1,6 @@
 import { History } from "lucide-react";
 import { PageHeader } from "@/components/admin/page-header";
+import { AccountForm } from "@/components/admin/settings/account-form";
 import { BookingSettingsForm } from "@/components/admin/settings/booking-settings-form";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -68,24 +69,9 @@ export default async function SettingsPage() {
         )}
 
         <Card className="p-5 sm:p-6">
-          <h2 className="text-lg font-bold text-navy-800">Your account</h2>
-          <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-3">
-            <div>
-              <dt className="text-xs text-body">Name</dt>
-              <dd className="font-semibold text-navy-800">{admin.fullName}</dd>
-            </div>
-            <div className="min-w-0">
-              <dt className="text-xs text-body">Email</dt>
-              <dd className="break-anywhere font-semibold text-navy-800">{admin.email}</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-body">Role</dt>
-              <dd>
-                <Badge tone="navy">Super Admin</Badge>
-              </dd>
-            </div>
-          </dl>
-          <p className="mt-3 text-xs text-body">Admin roles can only be granted from the database, never from the website.</p>
+          <h2 className="text-lg font-bold text-navy-800">Your profile</h2>
+          <p className="mt-0.5 text-sm text-body">Your name and photo as shown in the dashboard. Admin roles can only be granted from the database.</p>
+          <AccountForm email={admin.email} fullName={admin.fullName} avatarPath={admin.avatarPath} />
         </Card>
 
         <Card className="overflow-hidden">

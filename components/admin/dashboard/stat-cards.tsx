@@ -9,7 +9,7 @@ type StatKey = "total" | "today" | "pending" | "confirmed" | "completed" | "pati
 
 const CARDS: { key: StatKey; label: string; icon: LucideIcon; href: string; tone: string }[] = [
   { key: "today", label: "Today's appointments", icon: CalendarDays, href: "/admin/appointments?range=today", tone: "bg-brand-50 text-brand-700" },
-  { key: "pending", label: "Pending", icon: Clock3, href: "/admin/appointments?status=pending", tone: "bg-warning-50 text-warning-700" },
+  { key: "pending", label: "Pending", icon: Clock3, href: "/admin/appointments?status=pending", tone: "bg-danger-50 text-danger-700" },
   { key: "confirmed", label: "Confirmed", icon: CalendarCheck2, href: "/admin/appointments?status=confirmed", tone: "bg-brand-50 text-brand-700" },
   { key: "completed", label: "Completed", icon: CircleCheckBig, href: "/admin/appointments?status=completed", tone: "bg-success-50 text-success-700" },
   { key: "total", label: "Total appointments", icon: CalendarRange, href: "/admin/appointments", tone: "bg-navy-50 text-navy-800" },

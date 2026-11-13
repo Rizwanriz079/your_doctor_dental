@@ -27,6 +27,8 @@ export type MyBooking = {
   created_at: string;
   upcoming: boolean;
   can_cancel: boolean;
+  /** Latest change made by the clinic (not by the patient), if any. */
+  last_change?: { at: string; type: string; to_status: string | null; from_date: string | null; from_time: string | null } | null;
 };
 
 export function MyBookings({ bookings }: { bookings: MyBooking[] }) {

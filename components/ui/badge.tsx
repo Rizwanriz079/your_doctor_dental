@@ -39,7 +39,7 @@ export function Badge({
 }
 
 const STATUS: Record<string, { label: string; tone: BadgeTone; icon: LucideIcon }> = {
-  pending: { label: "Pending", tone: "warning", icon: Clock3 },
+  pending: { label: "Pending", tone: "danger", icon: Clock3 },
   confirmed: { label: "Confirmed", tone: "brand", icon: CheckCircle2 },
   completed: { label: "Completed", tone: "success", icon: CircleCheckBig },
   rejected: { label: "Rejected", tone: "danger", icon: XCircle },

@@ -7,6 +7,8 @@ export type AdminSession = {
   userId: string;
   email: string;
   fullName: string;
+  /** Storage path of the admin's photo (Supabase Auth user_metadata.avatar_url), if set. */
+  avatarPath: string | null;
 };
 
 /**
@@ -30,8 +32,14 @@ export const getAdmin = cache(async (): Promise<AdminSession | null> => {
     userId,
     email: profile.email ?? (typeof data.claims.email === "string" ? data.claims.email : ""),
     fullName: profile.full_name ?? "Admin",
+    avatarPath: avatarFromClaims(data.claims.user_metadata),
   };
 });
+
+function avatarFromClaims(meta: unknown): string | null {
+  const v = meta && typeof meta === "object" ? (meta as Record<string, unknown>).avatar_url : null;
+  return typeof v === "string" && v.startsWith("avatars/") ? v : null;
+}
 
 /** Use at the top of every admin page / server action. Redirects when not authorised. */
 export async function requireAdmin(): Promise<AdminSession> {

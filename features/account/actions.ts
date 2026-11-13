@@ -146,3 +146,14 @@ export async function cancelMyAppointment(input: unknown): Promise<ActionResult>
   revalidatePath("/admin/dashboard");
   return { ok: true, message: "Your appointment has been cancelled." };
 }
+
+/** Remembers (on the Supabase Auth account) that the patient has seen their booking updates. */
+export async function markBookingUpdatesSeen(): Promise<ActionResult> {
+  if (!(await getPatient())) return { ok: false, message: "Please sign in again." };
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ data: { updates_seen_at: new Date().toISOString() } });
+  if (error) return { ok: false, message: "Could not save. Please try again." };
+  // New token so the next page load already knows the updates were seen.
+  await supabase.auth.refreshSession();
+  return { ok: true };
+}

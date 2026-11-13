@@ -1,5 +1,6 @@
 import { LogIn, UserRound } from "lucide-react";
 import type { Metadata } from "next";
+import { BookingUpdatesPopup } from "@/components/account/booking-updates-popup";
 import { DetailsForm } from "@/components/account/details-form";
 import { MyBookings, type MyBooking } from "@/components/account/my-bookings";
 import { LookupForm } from "@/components/public/lookup-form";
@@ -14,6 +15,12 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
+/** Clinic changes since the patient last dismissed the popup (first visit: the last 14 days). */
+function unseenUpdates(bookings: MyBooking[], seenAt: string | null) {
+  const since = seenAt ? Date.parse(seenAt) : Date.now() - 14 * 24 * 60 * 60 * 1000;
+  return bookings.filter((b) => b.last_change && Date.parse(b.last_change.at) > since);
+}
+
 export default async function MyAppointmentsPage({ searchParams }: PageProps<"/my-appointments">) {
   const patient = await getPatient();
 
@@ -23,8 +30,10 @@ export default async function MyAppointmentsPage({ searchParams }: PageProps<"/m
     const { data, error } = await supabase.rpc("patient_my_appointments");
     if (error) console.error("patient_my_appointments failed", error.code, error.message);
     const bookings = (data ?? []) as unknown as MyBooking[];
+    const updates = unseenUpdates(bookings, patient.updatesSeenAt);
     return (
       <>
+        <BookingUpdatesPopup updates={updates} />
         <PageIntro
           eyebrow="My appointments"
           title={`Hello, ${patient.fullName.split(" ")[0]}`}

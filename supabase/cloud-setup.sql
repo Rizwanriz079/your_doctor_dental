@@ -1850,3 +1850,194 @@ where not exists (select 1 from public.doctor_schedules s where s.doctor_id = v.
 -- Anonymous visitors can still browse doctors and see availability.
 revoke execute on function public.book_appointment(uuid, uuid, date, text, text, text, text, text, boolean) from public, anon;
 grant execute on function public.book_appointment(uuid, uuid, date, text, text, text, text, text, boolean) to authenticated;
+
+-- Fix: bookings made while signed in as an admin/staff account were saved with user_id = null,
+-- so they showed on the confirmation screen but never in "My appointments" after a refresh.
+-- appointments are only ever inserted through book_appointment() (no dashboard insert path),
+-- so every booking made with a session belongs to that account.
+create or replace function public._appointments_set_user()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  if new.user_id is null and auth.uid() is not null then
+    new.user_id := auth.uid();
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists appointments_set_user on public.appointments;
+create trigger appointments_set_user before insert on public.appointments
+  for each row execute function public._appointments_set_user();
+
+-- Bookings made before any super admin existed created no notifications (they are only
+-- sent to admins who exist at booking time). This:
+--  1. backfills a notification for every still-pending upcoming booking, for every admin
+--     who does not have one yet (safe to re-run), and
+--  2. makes claim_first_admin() do the same for the new admin automatically.
+
+create or replace function public._notify_admin_of_pending(p_admin uuid)
+returns int language plpgsql security definer set search_path = '' as $$
+declare
+  v_count int;
+begin
+  insert into public.notifications (recipient_user_id, appointment_id, doctor_id, event_type, title, message, data)
+  select p_admin, a.id, a.doctor_id, 'appointment_created', 'New appointment booking',
+         format('%s has requested an appointment with %s for %s on %s at %s.',
+                split_part(a.patient_name, ' ', 1), d.full_name, sv.name,
+                to_char(a.appointment_date, 'FMMonth FMDD'), to_char(a.start_time, 'FMHH12:MI AM')),
+         jsonb_build_object('reference', a.booking_reference, 'doctor', d.full_name, 'service', sv.name,
+                            'date', a.appointment_date, 'time', to_char(a.start_time, 'HH24:MI'))
+    from public.appointments a
+    join public.doctors d on d.id = a.doctor_id
+    join public.services sv on sv.id = a.service_id
+   where a.status = 'pending'
+     and a.appointment_date >= (now() at time zone (select timezone from public.clinic_settings where id = 1))::date
+     and not exists (select 1 from public.notifications n
+                      where n.recipient_user_id = p_admin and n.appointment_id = a.id);
+  get diagnostics v_count = row_count;
+  return v_count;
+end $$;
+revoke execute on function public._notify_admin_of_pending(uuid) from public, anon, authenticated;
+
+create or replace function public.claim_first_admin(p_full_name text default null)
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare
+  v_uid uuid := auth.uid();
+  v_email text;
+  v_confirmed timestamptz;
+  v_name text := nullif(btrim(coalesce(p_full_name, '')), '');
+begin
+  if v_uid is null then
+    return jsonb_build_object('ok', false, 'code', 'not_signed_in', 'message', 'Please sign in to finish setup.');
+  end if;
+
+  -- Serialise concurrent attempts so only one account can ever win.
+  perform pg_advisory_xact_lock(hashtextextended('claim_first_admin', 0));
+
+  if exists (select 1 from public.profiles where role = 'super_admin') then
+    return jsonb_build_object('ok', false, 'code', 'already_set_up',
+      'message', 'This clinic already has an administrator. Ask them to give you access.');
+  end if;
+
+  select email, email_confirmed_at into v_email, v_confirmed from auth.users where id = v_uid;
+  if v_confirmed is null then
+    return jsonb_build_object('ok', false, 'code', 'email_not_confirmed',
+      'message', 'Please confirm your email address first, using the link we sent you.');
+  end if;
+
+  insert into public.profiles (id, email, full_name, role)
+  values (v_uid, v_email, coalesce(v_name, split_part(v_email, '@', 1)), 'super_admin')
+  on conflict (id) do update set role = 'super_admin', full_name = coalesce(v_name, public.profiles.full_name);
+
+  -- Bookings that arrived before there was an admin to notify.
+  perform public._notify_admin_of_pending(v_uid);
+
+  return jsonb_build_object('ok', true);
+end $$;
+
+-- One-time backfill for admins that already exist.
+select public._notify_admin_of_pending(id) from public.profiles where role = 'super_admin';
+
+-- patients.user_id was never filled: bookings attach the account to the APPOINTMENT
+-- (appointments.user_id) but not to the PATIENT record. This links the patient record to
+-- the signed-in account that booked, fills a missing email from the account, and backfills
+-- existing rows. (patients.user_id is unique, so an account is linked to one patient record;
+-- extra records for other phone numbers keep user_id empty.)
+
+create or replace function public._patients_link_account()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  v_email text;
+begin
+  if new.user_id is null or new.patient_id is null then
+    return new;
+  end if;
+  select lower(email) into v_email from auth.users where id = new.user_id;
+
+  update public.patients p
+     set user_id = case
+           when p.user_id is null and not exists (select 1 from public.patients x where x.user_id = new.user_id)
+           then new.user_id else p.user_id end,
+         email = coalesce(p.email, nullif(new.patient_email, ''), v_email)
+   where p.id = new.patient_id
+     and (p.user_id is null or p.email is null);
+  return new;
+end $$;
+revoke execute on function public._patients_link_account() from public, anon, authenticated;
+
+drop trigger if exists appointments_link_patient on public.appointments;
+create trigger appointments_link_patient after insert or update of user_id on public.appointments
+  for each row execute function public._patients_link_account();
+
+-- Backfill: one patient record per account (the most recently booked one).
+with latest as (
+  select distinct on (a.user_id) a.user_id, a.patient_id
+    from public.appointments a
+   where a.user_id is not null and a.patient_id is not null
+   order by a.user_id, a.created_at desc
+)
+update public.patients p
+   set user_id = l.user_id
+  from latest l
+ where p.id = l.patient_id
+   and p.user_id is null
+   and not exists (select 1 from public.patients x where x.user_id = l.user_id);
+
+-- Backfill missing patient emails from their bookings or linked account.
+update public.patients p
+   set email = coalesce(
+         (select nullif(a.patient_email, '') from public.appointments a
+           where a.patient_id = p.id and nullif(a.patient_email, '') is not null
+           order by a.created_at desc limit 1),
+         (select lower(u.email) from auth.users u where u.id = p.user_id))
+ where p.email is null;
+
+-- "My appointments" popup: tell the patient what the CLINIC changed on their bookings
+-- (confirmed, declined, cancelled, completed, moved to a new time). Adds the latest
+-- clinic-made change to each booking. Changes the patient made themselves are ignored.
+
+create or replace function public.patient_my_appointments()
+returns jsonb language plpgsql stable security definer set search_path = '' as $$
+declare
+  v_uid uuid := auth.uid();
+  v_now timestamp := now() at time zone (select timezone from public.clinic_settings where id = 1);
+  v jsonb;
+begin
+  if v_uid is null then
+    raise exception 'Not signed in' using errcode = '42501';
+  end if;
+  select coalesce(jsonb_agg(jsonb_build_object(
+      'id', a.id,
+      'reference', a.booking_reference,
+      'status', a.status,
+      'date', a.appointment_date,
+      'start_time', to_char(a.start_time, 'HH24:MI'),
+      'end_time', to_char(a.end_time, 'HH24:MI'),
+      'doctor_name', d.full_name,
+      'doctor_slug', case when d.status = 'active' then d.slug end,
+      'doctor_photo', d.profile_image_path,
+      'service_name', sv.name,
+      'status_reason', case when a.status in ('rejected', 'cancelled') then a.status_reason end,
+      'created_at', a.created_at,
+      'upcoming', (a.appointment_date + a.start_time) >= v_now,
+      'can_cancel', a.status in ('pending', 'confirmed') and (a.appointment_date + a.start_time) > v_now,
+      'last_change', (
+        select jsonb_build_object('at', e.created_at, 'type', e.event_type, 'to_status', e.to_status,
+                                  'from_date', e.details ->> 'from_date', 'from_time', e.details ->> 'from_time')
+          from public.appointment_events e
+         where e.appointment_id = a.id
+           and e.event_type in ('status_changed', 'rescheduled')
+           and e.actor_id is distinct from v_uid           -- not the patient's own action
+           and not (e.event_type = 'status_changed' and e.to_status = 'expired')
+         order by e.created_at desc
+         limit 1)
+    ) order by a.appointment_date desc, a.start_time desc), '[]'::jsonb)
+    into v
+    from public.appointments a
+    join public.doctors d on d.id = a.doctor_id
+    join public.services sv on sv.id = a.service_id
+   where a.user_id = v_uid;
+  return v;
+end $$;
+
+revoke execute on function public.patient_my_appointments() from public, anon;
+grant execute on function public.patient_my_appointments() to authenticated;

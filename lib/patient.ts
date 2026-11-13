@@ -13,6 +13,8 @@ export type PatientSession = {
   fullName: string;
   phone: string;
   avatarUrl: string | null;
+  /** When the patient last dismissed the "booking updates" popup (ISO), if ever. */
+  updatesSeenAt: string | null;
 };
 
 export const getPatient = cache(async (): Promise<PatientSession | null> => {
@@ -30,6 +32,7 @@ export const getPatient = cache(async (): Promise<PatientSession | null> => {
     fullName: str(meta.full_name) || str(meta.name) || email.split("@")[0],
     phone: str(meta.phone),
     avatarUrl: str(meta.avatar_url) || str(meta.picture) || null,
+    updatesSeenAt: str(meta.updates_seen_at) || null,
   };
 });
 

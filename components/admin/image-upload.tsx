@@ -24,7 +24,7 @@ export function ImageUpload({
 }: {
   value: string | null | undefined;
   onChange: (path: string | null) => void;
-  folder: "doctors" | "services" | "site" | "gallery";
+  folder: "doctors" | "services" | "site" | "gallery" | "avatars";
   label?: string;
   aspect?: string;
   className?: string;

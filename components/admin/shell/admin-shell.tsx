@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -16,6 +17,7 @@ import {
   Settings,
   Sparkles,
   Stethoscope,
+  UserRound,
   Users,
   X,
   type LucideIcon,
@@ -24,7 +26,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { signOutAction } from "@/features/auth/actions";
 import { duration, easeOut } from "@/lib/motion";
 import type { Notification } from "@/lib/types";
-import { cn, initials } from "@/lib/utils";
+import { cn, initials, mediaUrl } from "@/lib/utils";
 import { NotificationBell } from "../notifications/notification-bell";
 import { NotificationsProvider, useNotifications } from "../notifications/notifications-provider";
 import { BrandMark } from "./brand-mark";
@@ -44,7 +46,7 @@ const NAV: NavItem[] = [
 ];
 
 type ShellProps = {
-  admin: { userId: string; email: string; fullName: string };
+  admin: { userId: string; email: string; fullName: string; avatarPath: string | null };
   clinicName: string;
   logoPath: string | null;
   initialNotifications: Notification[];
@@ -296,9 +298,19 @@ function UserMenu({ admin }: { admin: ShellProps["admin"] }) {
         aria-label={`Account menu for ${admin.fullName}`}
         className="flex h-11 items-center gap-2.5 rounded-2xl bg-white pl-1.5 pr-2 ring-1 ring-line transition-colors hover:bg-muted sm:pr-3"
       >
-        <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-brand-100 to-sky-soft text-xs font-bold text-brand-700">
-          {initials(admin.fullName) || "A"}
-        </span>
+        {admin.avatarPath ? (
+          <Image
+            src={mediaUrl(admin.avatarPath) ?? ""}
+            alt=""
+            width={32}
+            height={32}
+            className="size-8 rounded-xl object-cover"
+          />
+        ) : (
+          <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-brand-100 to-sky-soft text-xs font-bold text-brand-700">
+            {initials(admin.fullName) || "A"}
+          </span>
+        )}
         <span className="hidden max-w-[10rem] truncate text-sm font-semibold text-navy-800 md:inline">{admin.fullName}</span>
         <ChevronDown className={cn("hidden size-4 text-body transition-transform md:block", open && "rotate-180")} aria-hidden />
       </button>
@@ -319,6 +331,14 @@ function UserMenu({ admin }: { admin: ShellProps["admin"] }) {
               <p className="mt-1 text-xs font-semibold text-brand-700">Super Admin</p>
             </div>
             <div className="p-1.5">
+              <Link
+                href="/admin/settings"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-navy-800 hover:bg-muted"
+              >
+                <UserRound className="size-4" aria-hidden />
+                Edit profile
+              </Link>
               <Link
                 href="/"
                 target="_blank"
