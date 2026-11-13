@@ -46,6 +46,6 @@ export async function getServiceFormData(id?: string) {
     service: serviceRes.data,
     doctors: doctorsRes.data ?? [],
     categories: Array.from(new Set((categoriesRes.data ?? []).map((c) => c.category))).sort(),
-    currency: settingsRes.data?.currency ?? "AED",
+    currency: settingsRes.data?.currency ?? "INR",
   };
 }

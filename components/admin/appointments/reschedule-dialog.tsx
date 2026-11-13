@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Textarea } from "@/components/ui/field";
 import { getRescheduleSlots, rescheduleAppointment } from "@/features/appointments/actions";
+import { promptWhatsApp } from "./whatsapp-panel";
 import type { DayAvailability } from "@/lib/types";
 import { cn, formatDate, formatTime, parseDateOnly, toDateOnly } from "@/lib/utils";
 
@@ -100,7 +101,11 @@ function RescheduleBody({
     const res = await rescheduleAppointment({ id: appointment.id, date: dateKey, startTime: slot, reason });
     setSaving(false);
     if (res.ok) {
-      toast.success(res.message ?? "Appointment rescheduled.");
+      toast.success(res.message ?? "Appointment rescheduled.", {
+        description: "Let the patient know their new time on WhatsApp.",
+        duration: 12000,
+        action: { label: "Send WhatsApp", onClick: () => promptWhatsApp("rescheduled", { date: dateKey, startTime: slot }) },
+      });
       onClose();
       router.refresh();
     } else {

@@ -21,7 +21,7 @@ export const bookingSettingsSchema = z.object({
     .string()
     .trim()
     .toUpperCase()
-    .regex(/^[A-Z]{3}$/, "Use a 3-letter ISO code such as AED, USD or EUR."),
+    .regex(/^[A-Z]{3}$/, "Use a 3-letter ISO code such as INR, USD or EUR."),
 });
 
 export type BookingSettingsValues = z.input<typeof bookingSettingsSchema>;

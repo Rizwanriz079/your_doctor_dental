@@ -168,7 +168,13 @@ export async function getAppointmentDetail(id: string) {
 
   return {
     appointment: appt,
-    events: (events ?? []).map((e) => ({ ...e, actor_name: e.actor_id ? (actors.get(e.actor_id) ?? "Admin") : null })),
+    events: (events ?? []).map((e) => ({
+      ...e,
+      // Staff have a profiles row; the patient who owns the booking (Supabase Auth only) does not.
+      actor_name: !e.actor_id
+        ? null
+        : (actors.get(e.actor_id) ?? (e.actor_id === appt.user_id ? `Patient (${appt.patient_name})` : "Staff")),
+    })),
   };
 }
 

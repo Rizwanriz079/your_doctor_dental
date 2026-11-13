@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 /** Public URL of a file in the `media` storage bucket. */
 export function mediaUrl(path: string | null | undefined): string | null {
   if (!path) return null;
-  if (/^https?:\/\//.test(path)) return path;
+  // Absolute URLs and images bundled in /public (e.g. "/images/doctors/x.jpg") pass through.
+  if (/^https?:\/\//.test(path) || path.startsWith("/")) return path;
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/${path}`;
 }
 
@@ -68,7 +69,7 @@ export function initials(name: string) {
     .join("");
 }
 
-export function formatPrice(value: number | null | undefined, currency = "AED") {
+export function formatPrice(value: number | null | undefined, currency = "INR") {
   if (value == null) return null;
   return new Intl.NumberFormat("en", { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
 }

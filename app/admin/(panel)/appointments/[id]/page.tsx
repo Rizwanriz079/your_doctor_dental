@@ -8,6 +8,8 @@ import { AppointmentActions } from "@/components/admin/appointments/appointment-
 import { AppointmentsLiveRefresh } from "@/components/admin/appointments/live-refresh";
 import { NoteForm } from "@/components/admin/appointments/note-form";
 import { AppointmentTimeline } from "@/components/admin/appointments/timeline";
+import { WhatsAppPanel } from "@/components/admin/appointments/whatsapp-panel";
+import { getSettings } from "@/features/public/queries";
 import { StatusBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/misc";
 import { getAppointmentDetail, getClinicTimezone, todayInTimezone } from "@/features/appointments/queries";
@@ -36,7 +38,8 @@ export default async function AppointmentDetailPage({ params }: PageProps<"/admi
   const detail = await getAppointmentDetail(id);
   if (!detail) notFound();
   const { appointment: a, events } = detail;
-  const today = todayInTimezone(await getClinicTimezone());
+  const [timezone, settings] = await Promise.all([getClinicTimezone(), getSettings()]);
+  const today = todayInTimezone(timezone);
   const notes = events.filter((e) => e.event_type === "note");
   const history = events.filter((e) => e.event_type !== "note");
 
@@ -138,7 +141,7 @@ export default async function AppointmentDetailPage({ params }: PageProps<"/admi
         </div>
 
         <div className="min-w-0 space-y-6">
-          <Card className="p-5 sm:p-6 lg:sticky lg:top-24">
+          <Card className="p-5 sm:p-6">
             <h2 className="mb-4 text-base font-bold text-navy-800">Actions</h2>
             <AppointmentActions
               appointment={{
@@ -150,6 +153,25 @@ export default async function AppointmentDetailPage({ params }: PageProps<"/admi
                 start_time: a.start_time,
                 today,
               }}
+            />
+          </Card>
+          <Card className="p-5 sm:p-6">
+            <h2 className="mb-2 text-base font-bold text-navy-800">Message patient</h2>
+            <WhatsAppPanel
+              appointment={{
+                id: a.id,
+                status: a.status,
+                reference: a.booking_reference,
+                patientName: a.patient_name,
+                patientPhone: a.patient_phone,
+                doctorName: a.doctors?.full_name ?? "your dentist",
+                serviceName: a.services?.name ?? "your appointment",
+                date: a.appointment_date,
+                startTime: a.start_time,
+                reason: a.status_reason,
+              }}
+              clinic={{ name: settings.clinic_name, phone: settings.phone, address: settings.address }}
+              siteUrl={(process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "")}
             />
           </Card>
           <Card className="p-5 sm:p-6">

@@ -50,7 +50,7 @@ export function LookupForm({ initialReference = "" }: { initialReference?: strin
                 aria-invalid={invalid}
                 value={reference}
                 onChange={(e) => setReference(e.target.value.toUpperCase())}
-                placeholder="LD-1A2B3C4D"
+                placeholder="YD-1A2B3C4D"
                 autoComplete="off"
                 spellCheck={false}
                 className="font-mono uppercase tracking-wider"
@@ -68,7 +68,7 @@ export function LookupForm({ initialReference = "" }: { initialReference?: strin
                 autoComplete="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+971 50 123 4567"
+                placeholder="+91 98765 43210"
               />
             )}
           </Field>

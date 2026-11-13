@@ -9,22 +9,26 @@ export type AdminSession = {
   fullName: string;
 };
 
-/** Returns the signed-in super admin, or null. Verified against Supabase Auth + profiles. */
+/**
+ * Returns the signed-in super admin, or null.
+ * getClaims() verifies the session JWT's signature locally against the project's public
+ * signing keys (cached), avoiding an Auth-server round trip on every request. The role is
+ * then read from `profiles`, a query that itself runs under RLS with the same verified token.
+ */
 export const getAdmin = cache(async (): Promise<AdminSession | null> => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  const { data, error } = await supabase.auth.getClaims();
+  const userId = data?.claims?.sub;
+  if (error || !userId) return null;
   const { data: profile } = await supabase
     .from("profiles")
     .select("role, full_name, email")
-    .eq("id", user.id)
+    .eq("id", userId)
     .maybeSingle();
   if (profile?.role !== "super_admin") return null;
   return {
-    userId: user.id,
-    email: profile.email ?? user.email ?? "",
+    userId,
+    email: profile.email ?? (typeof data.claims.email === "string" ? data.claims.email : ""),
     fullName: profile.full_name ?? "Admin",
   };
 });

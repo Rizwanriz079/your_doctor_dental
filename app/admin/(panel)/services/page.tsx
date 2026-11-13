@@ -61,7 +61,7 @@ export default async function ServicesPage({ searchParams }: PageProps<"/admin/s
     listServices(params),
     supabase.from("clinic_settings").select("currency").eq("id", 1).single(),
   ]);
-  const currency = settings?.currency ?? "AED";
+  const currency = settings?.currency ?? "INR";
   const filtered = Boolean(params.q || params.status);
   const price = (s: (typeof rows)[number]) =>
     s.price == null ? <span className="text-body">—</span> : (

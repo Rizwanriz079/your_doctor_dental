@@ -4,6 +4,7 @@ import { BookingWizard } from "@/components/booking/booking-wizard";
 import type { WizardDoctor, WizardService } from "@/components/booking/types";
 import { PageIntro } from "@/components/public/sections";
 import { getActiveDoctors, getActiveServices, getSettings } from "@/features/public/queries";
+import { getPatient } from "@/lib/patient";
 
 export const metadata: Metadata = {
   title: "Book an Appointment",
@@ -21,10 +22,11 @@ function clinicToday(timeZone: string) {
 
 export default async function BookAppointmentPage({ searchParams }: PageProps<"/book-appointment">) {
   const sp = await searchParams;
-  const [settings, services, doctors] = await Promise.all([
+  const [settings, services, doctors, patient] = await Promise.all([
     getSettings(),
     getActiveServices(),
     getActiveDoctors({ bookableOnly: true }),
+    getPatient(),
   ]);
 
   const wizardDoctors: WizardDoctor[] = doctors
@@ -70,6 +72,7 @@ export default async function BookAppointmentPage({ searchParams }: PageProps<"/
             requireEmail={settings.require_email}
             initialServiceId={typeof sp.service === "string" ? sp.service : undefined}
             initialDoctorId={typeof sp.doctor === "string" ? sp.doctor : undefined}
+            prefill={patient ? { fullName: patient.fullName, phone: patient.phone, email: patient.email } : null}
           />
         </div>
       </section>

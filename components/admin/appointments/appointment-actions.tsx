@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { setAppointmentStatus } from "@/features/appointments/actions";
 import { RescheduleDialog } from "./reschedule-dialog";
+import { promptWhatsApp } from "./whatsapp-panel";
 
 type Target = "confirmed" | "rejected" | "cancelled" | "completed";
 
@@ -55,7 +56,12 @@ export function AppointmentActions({
     const res = await setAppointmentStatus({ id: appointment.id, status: target, reason });
     setBusy(false);
     if (res.ok) {
-      toast.success(res.message ?? "Updated.");
+      const kind = target;
+      toast.success(res.message ?? "Updated.", {
+        description: "Let the patient know on WhatsApp.",
+        duration: 12000,
+        action: { label: "Send WhatsApp", onClick: () => promptWhatsApp(kind, { reason }) },
+      });
       setTarget(null);
       router.refresh();
     } else {

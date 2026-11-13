@@ -67,7 +67,7 @@ create trigger profiles_guard_role before update on public.profiles
 -- ---------------------------------------------------------------------
 create table public.clinic_settings (
   id smallint primary key default 1 check (id = 1),
-  clinic_name text not null default 'Lumora Dental',
+  clinic_name text not null default 'Your Dentist',
   tagline text not null default 'Gentle, modern dentistry',
   logo_path text,
   hero_eyebrow text not null default 'Modern dentistry · Personal care',
@@ -709,7 +709,7 @@ begin
 
   -- 7. Create the appointment with a unique reference.
   loop
-    v_ref := 'LD-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8));
+    v_ref := 'YD-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8));
     exit when not exists (select 1 from public.appointments where booking_reference = v_ref);
   end loop;
 

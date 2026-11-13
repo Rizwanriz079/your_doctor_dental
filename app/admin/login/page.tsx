@@ -4,11 +4,14 @@ import { CalendarCheck2, ShieldCheck, Stethoscope } from "lucide-react";
 import { BrandMark } from "@/components/admin/shell/brand-mark";
 import { getAdmin } from "@/lib/auth";
 import { getSettings } from "@/features/public/queries";
+import { getSetupState } from "@/features/setup/queries";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Admin sign in", robots: { index: false, follow: false } };
 
 export default async function AdminLoginPage({ searchParams }: PageProps<"/admin/login">) {
+  // Fresh installation (no database or no admin yet): go to the first-run setup wizard.
+  if ((await getSetupState()).state !== "ready") redirect("/admin/setup");
   const [admin, settings, params] = await Promise.all([getAdmin(), getSettings(), searchParams]);
   const next = typeof params.next === "string" ? params.next : undefined;
   if (admin) redirect(next?.startsWith("/admin") && !next.startsWith("//") ? next : "/admin/dashboard");

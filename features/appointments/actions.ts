@@ -5,6 +5,7 @@ import { z } from "zod";
 import { assertAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult, DayAvailability } from "@/lib/types";
+import { MESSAGE_KIND_LABEL } from "@/lib/whatsapp";
 
 type RpcResult = { ok: boolean; code?: string; message?: string };
 
@@ -125,4 +126,28 @@ export async function addAppointmentNote(input: z.input<typeof noteSchema>): Pro
   if (!res.ok) return { ok: false, message: res.message ?? "The note could not be saved." };
   revalidatePath(`/admin/appointments/${parsed.data.id}`);
   return { ok: true, message: "Note added." };
+}
+
+const whatsappLogSchema = z.object({
+  id: idSchema,
+  kind: z.enum(["pending", "confirmed", "rescheduled", "rejected", "cancelled", "completed", "expired"]),
+});
+
+/**
+ * Records in the booking's notes that staff opened a WhatsApp message for the patient.
+ * (Click-to-chat cannot confirm delivery; this shows who prepared which message and when.)
+ */
+export async function logWhatsAppMessage(input: z.input<typeof whatsappLogSchema>): Promise<ActionResult> {
+  const denied = await guard();
+  if (denied) return denied;
+  const parsed = whatsappLogSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "Invalid request." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("admin_add_appointment_note", {
+    p_id: parsed.data.id,
+    p_note: `WhatsApp message opened for patient: ${MESSAGE_KIND_LABEL[parsed.data.kind]}.`,
+  });
+  if (error) return { ok: false, message: "Could not record the message." };
+  revalidatePath(`/admin/appointments/${parsed.data.id}`);
+  return { ok: true };
 }

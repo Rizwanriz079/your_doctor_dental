@@ -34,7 +34,7 @@ export const lookupSchema = z.object({
     .string()
     .trim()
     .toUpperCase()
-    .regex(/^LD-[A-F0-9]{8}$/, "Enter the reference from your confirmation, e.g. LD-1A2B3C4D."),
+    .regex(/^(YD|LD)-[A-F0-9]{8}$/, "Enter the reference from your confirmation, e.g. YD-1A2B3C4D."),
   phone: z
     .string()
     .trim()

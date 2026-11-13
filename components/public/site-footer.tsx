@@ -37,7 +37,7 @@ export function SiteFooter({ settings }: { settings: ClinicSettings }) {
               ["/contact", "Contact"],
             ].map(([href, label]) => (
               <li key={href}>
-                <Link href={href} className="inline-flex min-h-9 items-center transition-colors hover:text-white">
+                <Link href={href} prefetch className="inline-flex min-h-9 items-center transition-colors hover:text-white">
                   {label}
                 </Link>
               </li>

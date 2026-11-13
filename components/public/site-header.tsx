@@ -9,6 +9,8 @@ import { ButtonLink } from "@/components/ui/button";
 import { duration, easeOut } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
+import { AccountMenu, PatientAvatar, type HeaderPatient } from "@/components/account/account-menu";
+import { signOut } from "@/features/account/actions";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -22,7 +24,17 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader({ clinicName, logoPath, phone }: { clinicName: string; logoPath: string | null; phone: string }) {
+export function SiteHeader({
+  clinicName,
+  logoPath,
+  phone,
+  patient = null,
+}: {
+  clinicName: string;
+  logoPath: string | null;
+  phone: string;
+  patient?: HeaderPatient;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -102,6 +114,7 @@ export function SiteHeader({ clinicName, logoPath, phone }: { clinicName: string
                 <li key={item.href} className="relative">
                   <Link
                     href={item.href}
+                    prefetch
                     aria-current={active ? "page" : undefined}
                     className={cn(
                       "relative z-10 block rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
@@ -125,6 +138,7 @@ export function SiteHeader({ clinicName, logoPath, phone }: { clinicName: string
         </nav>
 
         <div className="flex items-center gap-2">
+          <AccountMenu patient={patient} />
           <ButtonLink href="/book-appointment" variant="primary" size="md" className="hidden sm:inline-flex">
             <CalendarCheck className="size-4" aria-hidden />
             Book Appointment
@@ -183,6 +197,7 @@ export function SiteHeader({ clinicName, logoPath, phone }: { clinicName: string
                     >
                       <Link
                         href={item.href}
+                        prefetch
                         aria-current={active ? "page" : undefined}
                         onClick={() => setOpen(false)}
                         className={cn(
@@ -211,13 +226,51 @@ export function SiteHeader({ clinicName, logoPath, phone }: { clinicName: string
                     Call {phone}
                   </a>
                 )}
-                <Link
-                  href="/my-appointments"
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-11 items-center justify-center text-sm font-semibold text-brand-700 hover:underline"
-                >
-                  Check a booking
-                </Link>
+                {patient ? (
+                  <div className="mt-2 rounded-2xl bg-muted p-3">
+                    <div className="flex items-center gap-3">
+                      <PatientAvatar patient={patient} size={36} />
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-navy-800">{patient.fullName}</p>
+                        <p className="truncate text-xs text-body">{patient.email}</p>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <Link
+                        href="/my-appointments"
+                        onClick={() => setOpen(false)}
+                        className="flex min-h-11 items-center justify-center rounded-full bg-white text-sm font-semibold text-navy-800 ring-1 ring-line"
+                      >
+                        My bookings
+                      </Link>
+                      <form action={signOut}>
+                        <button
+                          type="submit"
+                          className="flex min-h-11 w-full items-center justify-center rounded-full bg-white text-sm font-semibold text-danger-700 ring-1 ring-line"
+                        >
+                          Sign out
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-11 items-center justify-center rounded-full text-sm font-semibold text-navy-800 ring-1 ring-line hover:bg-muted"
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      href="/my-appointments"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-11 items-center justify-center rounded-full text-sm font-semibold text-brand-700 ring-1 ring-line hover:bg-muted"
+                    >
+                      Check a booking
+                    </Link>
+                  </div>
+                )}
               </div>
             </motion.div>
           </>

@@ -12,12 +12,18 @@ const manrope = Manrope({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSettings();
-  return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3100"),
-    title: { default: `${settings.clinic_name} | ${settings.tagline}`, template: `%s | ${settings.clinic_name}` },
-    description: settings.hero_text,
-  };
+  const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3100");
+  try {
+    const settings = await getSettings();
+    return {
+      metadataBase,
+      title: { default: `${settings.clinic_name} | ${settings.tagline}`, template: `%s | ${settings.clinic_name}` },
+      description: settings.hero_text,
+    };
+  } catch {
+    // Database not installed yet (first-run setup): use a neutral title instead of failing every page.
+    return { metadataBase, title: { default: "Your Dentist", template: "%s | Your Dentist" } };
+  }
 }
 
 export const viewport: Viewport = {

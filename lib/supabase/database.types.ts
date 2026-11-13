@@ -101,6 +101,7 @@ export type Database = {
           status_reason: string | null
           time_range: unknown
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           appointment_date: string
@@ -124,6 +125,7 @@ export type Database = {
           status_reason?: string | null
           time_range?: unknown
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           appointment_date?: string
@@ -147,6 +149,7 @@ export type Database = {
           status_reason?: string | null
           time_range?: unknown
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -942,6 +945,14 @@ export type Database = {
         Args: { p_phone: string; p_reference: string }
         Returns: Json
       }
+      setup_status: { Args: never; Returns: Json }
+      claim_first_admin: { Args: { p_full_name?: string }; Returns: Json }
+      patient_cancel_appointment: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: Json
+      }
+      patient_link_bookings: { Args: never; Returns: number }
+      patient_my_appointments: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never

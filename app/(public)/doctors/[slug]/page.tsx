@@ -41,7 +41,7 @@ export default async function DoctorProfilePage({ params }: PageProps<"/doctors/
             <Reveal x={-20} y={0}>
               <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-50 via-sky-soft to-navy-50 shadow-soft ring-1 ring-white">
                 {photo ? (
-                  <Image src={photo} alt={`Portrait of ${doctor.full_name}`} fill priority sizes="(min-width: 768px) 22rem, 92vw" className="object-cover" />
+                  <Image src={photo} alt={`Portrait of ${doctor.full_name}`} fill priority sizes="(min-width: 768px) 22rem, 92vw" className="object-cover object-top" />
                 ) : (
                   <div className="grid h-full place-items-center" aria-hidden>
                     <span className="grid size-32 place-items-center rounded-[2rem] bg-white/85 text-4xl font-bold text-brand-700 shadow-soft">

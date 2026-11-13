@@ -26,6 +26,8 @@ type Props = {
   requireEmail: boolean;
   initialServiceId?: string;
   initialDoctorId?: string;
+  /** Signed-in patient details from Supabase Auth, used to pre-fill the details step. */
+  prefill?: { fullName: string; phone: string; email: string } | null;
 };
 
 const RETRY_CODES = new Set(["slot_taken", "fully_booked", "no_slots_left", "invalid_slot"]);
@@ -294,7 +296,7 @@ export function BookingWizard(props: Props) {
 
                 {step === 4 && (
                   <DetailsStep
-                    defaultValues={details}
+                    defaultValues={details ?? (props.prefill ? { ...props.prefill, message: "", consent: false } : null)}
                     requireEmail={requireEmail}
                     onBack={() => go(3)}
                     onSubmit={(d) => {

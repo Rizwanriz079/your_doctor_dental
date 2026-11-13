@@ -1,0 +1,16 @@
+/**
+ * "Your Dentist" logo mark: Line Mark
+ * Minimal navy outline with teal accent. Clean and modern.
+ * Pure SVG so it stays crisp from favicon size upwards.
+ * (The same artwork is used for the browser-tab icon in app/icon.svg.)
+ */
+export function LogoMark({ className, title }: { className?: string; title?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} role={title ? "img" : undefined} aria-hidden={title ? undefined : true}>
+      {title && <title>{title}</title>}
+      <path d="M32 17C36 14 42 13 46 15C51 17.5 52.5 23 51.5 29C50.8 33.5 48.5 37 47.5 41.5C46.5 46 46 51 43.5 51.5C41 52 40.2 47.5 39.5 44C38.8 40.5 36.5 38.5 32 38.5C27.5 38.5 25.2 40.5 24.5 44C23.8 47.5 23 52 20.5 51.5C18 51 17.5 46 16.5 41.5C15.5 37 13.2 33.5 12.5 29C11.5 23 13 17.5 18 15C22 13 28 14 32 17Z" fill="none" stroke="#17324d" strokeWidth="3.4" strokeLinejoin="round" />
+      <path d="M20.5 25.5c2.2-4 6.8-5.6 10.8-3.4" fill="none" stroke="#0f8b8d" strokeWidth="3.4" strokeLinecap="round" />
+      <circle cx="44.5" cy="23" r="2.6" fill="#0f8b8d" />
+    </svg>
+  );
+}

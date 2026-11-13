@@ -1,4 +1,4 @@
-# Lumora Dental: Clinic Website & Appointment Management
+# Your Dentist: Clinic Website & Appointment Management
 
 A responsive dental clinic website plus a secure Super Admin dashboard, sharing one Supabase (PostgreSQL) backend.
 
@@ -84,9 +84,20 @@ Everything that decides availability lives in Postgres, so the database is autho
 - **Admin changes that affect bookings** are refused until the admin explicitly acknowledges them: capacity set below existing bookings, a closed day or shorter hours with bookings, or schedule and default-capacity changes. Existing bookings are never changed silently.
 - **Default capacity rule**: the doctor's default applies to every date that has no date-specific override, including future dates. Overrides are never rewritten.
 
-### Patient accounts
+### Patient accounts (Supabase Auth)
 
-v1 uses **guest booking** (spec §12.1, option 1). Patients receive a booking reference and can check their status at `/my-appointments` using the reference plus their phone number. Patient records are de-duplicated by phone number. The `patients.user_id` column is reserved for linking accounts if patient login is added later.
+Patients can **book as guests** or **sign in with Google or email + password** (`/login`, `/register`, `/forgot-password`).
+
+- **Supabase Auth only.** A patient's identity and details (email, name, Google avatar, phone) live in the Supabase Auth user (`auth.users` + `user_metadata`). There is no patient profile table. `profiles` exists only to grant admin/staff roles.
+- **Booking history.** A booking made while signed in is linked to the account (`appointments.user_id`). `/my-appointments` shows upcoming and past bookings, and the patient can cancel an upcoming one. Cancelling releases the slot and notifies the admins.
+- **Earlier guest bookings** are linked automatically when their email matches the account's **verified** email (Google, or email after clicking the confirmation link). They are never linked by phone number, which isn't verified.
+- **Pre-filled booking:** a signed-in patient's name, email and phone pre-fill the booking form. They can edit name and phone on `/my-appointments`.
+- **Guests** can still check a single booking at `/my-appointments` with the booking reference plus the phone number.
+
+**Supabase dashboard setup (cloud):**
+1. *Authentication → Sign In / Providers*: keep **Email** enabled with **Confirm email** on, and enable **Google** (client ID and secret from Google Cloud Console → Credentials → OAuth client ID, type "Web application"). In Google, add the authorised redirect URI shown by Supabase (`https://<project>.supabase.co/auth/v1/callback`).
+2. *Authentication → URL Configuration*: set **Site URL** to your site, and add `https://<your-site>/auth/callback` to **Redirect URLs**.
+3. *Authentication → Emails → SMTP*: add an email provider (for example Resend's free tier). Supabase's built-in email service only sends to your own team's addresses and is heavily rate-limited, so patients won't receive confirmation or reset emails without it.
 
 ---
 
@@ -94,7 +105,7 @@ v1 uses **guest booking** (spec §12.1, option 1). Patients receive a booking re
 
 1. Create a Supabase project, then `supabase link` and `supabase db push`. Do **not** run `seed.sql` in production.
 2. Create the first admin: invite the user in Supabase Auth, then run in SQL:
-   `update public.profiles set role = 'super_admin' where email = 'owner@yourclinic.com';`
+   `insert into public.profiles (id, email, full_name, role) select id, email, 'Clinic Owner', 'super_admin' from auth.users where email = 'owner@yourclinic.com' on conflict (id) do update set role = 'super_admin';`
 3. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `NEXT_PUBLIC_SITE_URL` in your host.
 4. Check that `pg_cron` is enabled (Database → Extensions) so expired holds are marked automatically.
 5. Fill in the real clinic content, doctors, services, opening hours and privacy text in the admin panel. Publish only genuine statistics and consented testimonials.

@@ -3,6 +3,7 @@
 import { useSafeReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { ArrowRight, CalendarCheck, Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { duration, easeOut } from "@/lib/motion";
@@ -19,12 +20,20 @@ type HeroProps = {
   categories: string[];
 };
 
+// The entrance animation plays once per visit. Returning to Home via client navigation
+// shows the hero immediately instead of replaying the fade-in each time.
+let heroHasPlayed = false;
+
 export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories }: HeroProps) {
   const reduce = useSafeReducedMotion();
+  const [playIntro] = useState(() => !heroHasPlayed);
+  useEffect(() => {
+    heroHasPlayed = true;
+  }, []);
   // Short staggered fade-up. Props are identical on server and client; under reduced motion
   // MotionConfig drops the movement and the text appears almost instantly.
   const up = (delay: number) => ({
-    initial: { opacity: 0, y: 20 },
+    initial: playIntro ? { opacity: 0, y: 20 } : false,
     animate: { opacity: 1, y: 0 },
     transition: reduce ? { duration: 0 } : { duration: duration.slow, ease: easeOut, delay },
   });
@@ -78,7 +87,7 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
 
         <motion.div
           className="relative mx-auto w-full max-w-[30rem] md:max-w-none"
-          initial={{ opacity: 0, x: 32 }}
+          initial={playIntro ? { opacity: 0, x: 32 } : false}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: duration.slow, ease: easeOut, delay: 0.15 }}
         >
@@ -111,7 +120,7 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
                   ? "left-0 top-[58%] bg-white/80 ring-1 ring-white sm:-left-4"
                   : "right-0 top-[14%] bg-navy-800/85 text-white ring-1 ring-white/10 sm:-right-2",
               )}
-              initial={{ opacity: 0, y: 12 }}
+              initial={playIntro ? { opacity: 0, y: 12 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: duration.medium, ease: easeOut, delay: 0.55 + i * 0.12 }}
             >

@@ -58,7 +58,7 @@ export function DetailsStep({
             <Input id={id} aria-describedby={describedBy} aria-invalid={invalid} autoComplete="name" {...register("fullName")} />
           )}
         </Field>
-        <Field label="Phone number" required error={errors.phone?.message} hint="Include your country code, e.g. +971.">
+        <Field label="Phone number" required error={errors.phone?.message} hint="Include your country code, e.g. +91.">
           {({ id, describedBy, invalid }) => (
             <Input
               id={id}
@@ -67,7 +67,7 @@ export function DetailsStep({
               type="tel"
               inputMode="tel"
               autoComplete="tel"
-              placeholder="+971 50 123 4567"
+              placeholder="+91 98765 43210"
               {...register("phone")}
             />
           )}

@@ -25,7 +25,9 @@ cleanup() {
   $PSQL >/dev/null 2>&1 <<SQL
 delete from notifications where doctor_id = '$DOC';
 delete from appointments where doctor_id = '$DOC';
-delete from patients where phone like '+97150000%';
+-- Only this suite's patients (phones +9715000xx) that no longer have appointments.
+delete from patients p where p.phone like '+9715000%' and p.full_name = 'Test Patient'
+  and not exists (select 1 from appointments a where a.patient_id = p.id);
 delete from doctors where id = '$DOC';
 SQL
 }
@@ -120,8 +122,9 @@ check "one notification per successful booking" "$(q "select count(*) from notif
 check "anon cannot read notifications" "$(as_anon "select count(*) from notifications")" "permission denied"
 check "anon cannot read appointments" "$(as_anon "select count(*) from appointments")" "permission denied"
 check "anon cannot read patients" "$(as_anon "select count(*) from patients")" "permission denied"
-check "mark all read" "$(as_admin "select admin_mark_notifications_read(null)")" ""
-check "unread count zero after mark-all" "$(q "select count(*) from notifications where recipient_user_id='$ADMIN' and not is_read")" "0"
+# Mark only this suite's notifications, never the real admin's other notifications.
+check "mark test notifications read" "$(as_admin "select admin_mark_notifications_read(array(select id from notifications where doctor_id='$DOC'))")" ""
+check "test notifications now read" "$(q "select count(*) from notifications where doctor_id='$DOC' and not is_read")" "0"
 
 echo "Pending hold expiry"
 $PSQL >/dev/null -c "update clinic_settings set pending_expiry_hours = 1"

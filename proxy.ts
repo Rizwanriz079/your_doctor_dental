@@ -26,13 +26,14 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Verifies the JWT locally (and refreshes an expired session) without an Auth-server round trip.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? { id: data.claims.sub } : null;
 
   const { pathname } = request.nextUrl;
   const isAdminArea = pathname.startsWith("/admin");
-  const isAdminLogin = pathname === "/admin/login";
+  // Pages under /admin that must open without a session: login and the first-run setup wizard.
+  const isAdminLogin = pathname === "/admin/login" || pathname === "/admin/setup";
 
   if (isAdminArea && !isAdminLogin && !user) {
     const url = request.nextUrl.clone();
@@ -45,5 +46,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // Every page, so signed-in patients and admins keep a fresh session cookie.
+  // Static files and images are skipped.
+  matcher: ["/((?!_next/static|_next/image|images/|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:png|jpg|jpeg|svg|webp|avif|ico)$).*)"],
 };
