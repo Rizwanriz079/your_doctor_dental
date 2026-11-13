@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getPatient } from "@/lib/patient";
@@ -90,7 +91,14 @@ export async function createBooking(input: unknown): Promise<BookingResult> {
   if (error || !data) {
     return { ok: false, code: "server_error", message: "Something went wrong while booking. Please try again." };
   }
-  return data as unknown as BookingResult;
+  const result = data as unknown as BookingResult;
+  if (result.ok) {
+    // Make sure the booking is attached to this account (by verified email) and that
+    // "My appointments" shows it straight away instead of a cached copy.
+    await supabase.rpc("patient_link_bookings");
+    revalidatePath("/my-appointments");
+  }
+  return result;
 }
 
 export type LookupResult =

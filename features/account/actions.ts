@@ -85,11 +85,11 @@ export async function signInWithGoogle(next?: string): Promise<ActionResult> {
   redirect(data.url);
 }
 
-export async function signOut(): Promise<void> {
+export async function signOut(to?: string | FormData): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
   refreshAccountViews();
-  redirect("/");
+  redirect(to === "/admin/setup" ? to : "/");
 }
 
 export async function requestPasswordReset(input: unknown): Promise<ActionResult> {

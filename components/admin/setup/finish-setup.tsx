@@ -3,9 +3,10 @@
 import { AlertCircle, ShieldCheck } from "lucide-react";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import { signOut } from "@/features/account/actions";
 import { finishFirstAdmin } from "@/features/setup/actions";
 
-export function FinishSetup({ email }: { email: string }) {
+export function FinishSetup({ email, signedIn = false }: { email: string; signedIn?: boolean }) {
   const [pending, start] = useTransition();
   const [error, setError] = useState<string>();
   return (
@@ -13,7 +14,7 @@ export function FinishSetup({ email }: { email: string }) {
       <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-success-50 text-success-700">
         <ShieldCheck className="size-7" aria-hidden />
       </div>
-      <h2 className="mt-4 text-lg font-bold">Email confirmed</h2>
+      <h2 className="mt-4 text-lg font-bold">{signedIn ? "You're signed in" : "Email confirmed"}</h2>
       <p className="mt-2 text-sm text-body">
         Make <span className="font-semibold text-navy-800 break-anywhere">{email}</span> the clinic&apos;s super admin?
       </p>
@@ -37,6 +38,13 @@ export function FinishSetup({ email }: { email: string }) {
       >
         Finish setup and open dashboard
       </Button>
+      {signedIn && (
+        <form action={signOut.bind(null, "/admin/setup")} className="mt-3">
+          <button type="submit" className="text-sm font-semibold text-brand-700 hover:underline">
+            Use a different account
+          </button>
+        </form>
+      )}
     </div>
   );
 }

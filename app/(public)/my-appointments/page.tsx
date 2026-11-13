@@ -19,7 +19,9 @@ export default async function MyAppointmentsPage({ searchParams }: PageProps<"/m
 
   if (patient) {
     const supabase = await createClient();
-    const { data } = await supabase.rpc("patient_my_appointments");
+    await supabase.rpc("patient_link_bookings"); // picks up bookings made with this account's verified email
+    const { data, error } = await supabase.rpc("patient_my_appointments");
+    if (error) console.error("patient_my_appointments failed", error.code, error.message);
     const bookings = (data ?? []) as unknown as MyBooking[];
     return (
       <>
