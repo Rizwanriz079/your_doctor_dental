@@ -9,7 +9,8 @@ import { getSetupState, supabaseHost } from "@/features/setup/queries";
 export const metadata: Metadata = { title: "Clinic setup", robots: { index: false, follow: false } };
 
 /** First-run wizard. Closed for good once a super admin exists (enforced in the database). */
-export default async function SetupPage() {
+export default async function SetupPage({ searchParams }: PageProps<"/admin/setup">) {
+  const { confirmed } = await searchParams;
   const setup = await getSetupState();
   if (setup.state === "ready") redirect("/admin/login");
 
@@ -26,7 +27,7 @@ export default async function SetupPage() {
 
   return (
     <SetupShell>
-      <SetupWizard setup={setup} host={supabaseHost()} />
+      <SetupWizard setup={setup} host={supabaseHost()} emailConfirmed={confirmed === "1"} />
     </SetupShell>
   );
 }

@@ -24,6 +24,11 @@ export async function GET(request: NextRequest) {
   }
 
   if (!ok) {
+    // Admin setup link opened in another browser/app: Supabase has still confirmed the
+    // email, so send them back to setup to finish by signing in with their password.
+    if (next === "/admin/setup/complete") {
+      return NextResponse.redirect(new URL("/admin/setup?confirmed=1", origin));
+    }
     const description = searchParams.get("error_description");
     const url = new URL("/login", origin);
     url.searchParams.set("error", description ? "provider" : "link");

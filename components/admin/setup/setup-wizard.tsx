@@ -68,7 +68,15 @@ function StatusRow({ ok, title, text }: { ok: boolean; title: string; text: stri
   );
 }
 
-export function SetupWizard({ setup, host }: { setup: SetupState; host: string | null }) {
+export function SetupWizard({
+  setup,
+  host,
+  emailConfirmed = false,
+}: {
+  setup: SetupState;
+  host: string | null;
+  emailConfirmed?: boolean;
+}) {
   const router = useRouter();
   const [checking, startCheck] = useTransition();
   const [pending, start] = useTransition();
@@ -152,6 +160,14 @@ export function SetupWizard({ setup, host }: { setup: SetupState; host: string |
             only do this once.
           </p>
           <form onSubmit={onSubmit} className="mt-5 space-y-4" noValidate>
+            {emailConfirmed && !error && (
+              <div role="status" className="flex items-start gap-2 rounded-xl bg-success-50 px-3.5 py-3 text-sm text-success-700">
+                <MailCheck className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <span>
+                  Your email is confirmed. Enter the <strong>same email and password</strong> again to finish and open the dashboard.
+                </span>
+              </div>
+            )}
             {error && (
               <div role="alert" className="flex items-start gap-2 rounded-xl bg-danger-50 px-3.5 py-3 text-sm text-danger-700">
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
