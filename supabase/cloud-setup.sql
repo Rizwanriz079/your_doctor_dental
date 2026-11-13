@@ -1,8 +1,8 @@
--- Your Dentist: one-time database setup for Supabase Cloud.
--- Paste into Supabase Dashboard > SQL Editor > New query, then click Run.
--- After it succeeds, open <your site>/admin/setup to create the super admin.
+-- Your Dentist Clinic Platform
+-- Supabase Cloud Setup SQL
+-- Paste this entire script into Supabase SQL Editor and click "Run"
+-- Generated: 2026-11-13
 
--- ===== 20261113000000_init_schema.sql =====
 -- =====================================================================
 -- Dental clinic platform – core schema
 -- Tables, constraints, RLS, availability engine, atomic booking,
@@ -1353,8 +1353,6 @@ begin
 exception when others then
   raise notice 'pg_cron not available; expired holds are released on booking and admin actions.';
 end $$;
-
--- ===== 20261113000100_api_grants.sql =====
 -- Explicit, minimal Data API privileges. RLS policies still apply on top of these.
 -- TRUNCATE bypasses RLS, so it is never granted to API roles.
 revoke all on all tables in schema public from anon, authenticated;
@@ -1376,8 +1374,6 @@ grant select on public.appointments, public.appointment_events, public.notificat
   to authenticated;
 
 alter default privileges in schema public revoke all on tables from anon, authenticated;
-
--- ===== 20261113000200_admin_range.sql =====
 -- Per-date availability summary for one doctor across a date range (admin availability grid).
 create or replace function public.admin_doctor_range(p_doctor uuid, p_from date, p_to date)
 returns jsonb language plpgsql stable security definer set search_path = '' as $$
@@ -1426,8 +1422,6 @@ end $$;
 
 revoke execute on function public.admin_doctor_range(uuid, date, date) from public, anon;
 grant execute on function public.admin_doctor_range(uuid, date, date) to authenticated;
-
--- ===== 20261113000300_admin_save_service.sql =====
 -- Create/update a service and replace its doctor assignments in one transaction.
 create or replace function public.admin_save_service(p jsonb)
 returns jsonb language plpgsql security definer set search_path = '' as $$
@@ -1478,13 +1472,9 @@ end $$;
 
 revoke execute on function public.admin_save_service(jsonb) from public, anon;
 grant execute on function public.admin_save_service(jsonb) to authenticated;
-
--- ===== 20261113000400_india_defaults.sql =====
 -- Clinic is based in Calicut (Kozhikode), Kerala: default to Indian time zone and currency.
 alter table public.clinic_settings alter column timezone set default 'Asia/Kolkata';
 alter table public.clinic_settings alter column currency set default 'INR';
-
--- ===== 20261113000500_patient_accounts.sql =====
 -- =====================================================================
 -- Patient accounts via Supabase Auth only.
 -- Patient identity and details (name, email, avatar, phone) live in auth.users
@@ -1630,8 +1620,6 @@ revoke execute on function public.patient_cancel_appointment(uuid, text) from pu
 grant execute on function public.patient_link_bookings() to authenticated;
 grant execute on function public.patient_my_appointments() to authenticated;
 grant execute on function public.patient_cancel_appointment(uuid, text) to authenticated;
-
--- ===== 20261113000600_first_admin_setup.sql =====
 -- =====================================================================
 -- First-run setup wizard: create the first super admin from the website.
 -- The account itself is a normal Supabase Auth user; this only grants the
@@ -1685,8 +1673,6 @@ revoke execute on function public.setup_status() from public;
 revoke execute on function public.claim_first_admin(text) from public, anon;
 grant execute on function public.setup_status() to anon, authenticated;
 grant execute on function public.claim_first_admin(text) to authenticated;
-
--- ===== Demo clinic content (from supabase/seed.sql, without the local test admin) =====
 -- =====================================================================
 -- LOCAL DEVELOPMENT SEED ONLY.
 -- Demo doctors/services so the UI can be exercised. Replace with the
