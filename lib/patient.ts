@@ -36,6 +36,6 @@ export const getPatient = cache(async (): Promise<PatientSession | null> => {
 /** Only allow redirects back into this site (prevents open-redirects via ?next=). */
 export function safeNext(next: string | null | undefined, fallback = "/my-appointments") {
   if (next === "/admin/setup/complete") return next; // first-run admin setup (email confirmation)
-  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/admin")) return fallback;
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.includes("\\") || next.startsWith("/admin")) return fallback;
   return next;
 }

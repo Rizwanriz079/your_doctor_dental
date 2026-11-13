@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { z } from "zod";
+import { getPatient } from "@/lib/patient";
 import { createClient } from "@/lib/supabase/server";
 import type { BookingResult, CalendarDay, DayAvailability } from "@/lib/types";
 import { bookingSchema, lookupSchema } from "@/lib/validation/booking";
@@ -69,6 +70,9 @@ export async function createBooking(input: unknown): Promise<BookingResult> {
   }
   if (throttled(`book:${await clientKey()}`)) {
     return { ok: false, code: "rate_limited", message: "Too many booking attempts. Please wait a few minutes and try again." };
+  }
+  if (!(await getPatient())) {
+    return { ok: false, code: "not_signed_in", message: "Please sign in to book an appointment." };
   }
   const b = parsed.data;
   const supabase = await createClient();

@@ -29,10 +29,6 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <Link href={`/register?next=${encodeURIComponent(next)}`} className="font-semibold text-brand-700 hover:underline">
             Create an account
           </Link>
-          <span className="mx-2 text-navy-300">·</span>
-          <Link href="/book-appointment" className="font-semibold text-brand-700 hover:underline">
-            Book without an account
-          </Link>
         </>
       }
     >
