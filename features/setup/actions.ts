@@ -62,6 +62,15 @@ export async function createFirstAdmin(input: unknown): Promise<ActionResult> {
     redirect("/admin/dashboard");
   }
   if (signIn.error.code === "email_not_confirmed") {
+    // Account exists but was never confirmed: send a fresh confirmation link.
+    const resent = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${await origin()}/auth/callback?next=/admin/setup/complete` },
+    });
+    if (resent.error?.code === "over_email_send_rate_limit") {
+      return { ok: false, message: "Too many emails sent. Please wait a minute and try again." };
+    }
     return { ok: true, message: "check_email" };
   }
 
