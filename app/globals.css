@@ -237,7 +237,7 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
 .clinic-hero-bottom a { display:flex; align-items:center; gap:.75rem; color:#087e83; }
 @keyframes clinic-spin { to { transform:rotate(360deg); } }
 @keyframes clinic-float { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-16px) rotate(2deg); } }
-.intro-finished .clinic-hero-copy { animation:welcome-arrive .8s ease-out both; }
+
 /* Five seconds total: rotate, settle, then open onto the homepage. */
 .welcome-intro { background:#eaf7f5; }
 .welcome-intro[open] { animation:clinic-intro-exit .7s cubic-bezier(.65,0,.35,1) 4.3s forwards; }
@@ -250,11 +250,12 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
 @keyframes clinic-intro-exit { to { transform:translateY(-100%); } }
 @media (max-width:900px) { .clinic-hero-grid { gap:2rem; min-height:0; } .clinic-hero h1 { font-size:clamp(2.8rem,6.5vw,4.3rem); } }
 @media (max-width:639px) { .clinic-hero { padding-top:0; } .clinic-hero-grid { grid-template-columns:1fr; padding-top:2rem; padding-bottom:2rem; gap:2.5rem; } .clinic-hero h1 { max-width:12ch; font-size:clamp(2.8rem,11vw,4rem); margin-top:1.25rem; } .clinic-hero-description { font-size:.95rem; margin-top:1.25rem; } .clinic-hero-art { width:90%; max-width:420px; margin:auto; } .clinic-hero-actions { gap:1rem; margin-top:1.5rem; } .clinic-hero-note { margin-top:1.5rem; } .clinic-hero-bottom { font-size:.5rem; line-height:1.7; } .clinic-art-card { padding:.8rem 1rem; } .clinic-kicker { font-size:.55rem; letter-spacing:.1em; } }
-@media (prefers-reduced-motion:reduce) { .clinic-tooth,.clinic-orbit,.clinic-art-card,.intro-finished .clinic-hero-copy { animation:none; } .clinic-public .care-card:hover { transform:none; } }
+@media (prefers-reduced-motion:reduce) { .clinic-tooth,.clinic-orbit,.clinic-art-card { animation:none; } .clinic-public .care-card:hover { transform:none; } }
 
 /* Calm five-second outline introduction; no spinner or visible skip control. */
 .welcome-outline { background:#fff; padding:1.5rem; }
-.welcome-outline[open] { animation:outline-exit .8s ease-in-out 4.2s forwards; }
+.welcome-outline[open] { animation:none; opacity:1; transition:opacity .8s ease-in-out; }
+.welcome-outline[open].is-leaving { opacity:0; }
 .welcome-outline .welcome-intro-content { animation:none; }
 .welcome-outline .welcome-mark { margin-bottom:1.75rem; }
 .welcome-outline .welcome-tooth { animation:none; }
@@ -264,4 +265,7 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
 .welcome-outline h2 { opacity:0; animation:outline-appear .8s ease-out 2s forwards; }
 .welcome-outline #welcome-intro-description { opacity:0; animation:outline-appear .7s ease-out 2.5s forwards; }
 @keyframes outline-appear { to { opacity:1; } }
-@keyframes outline-exit { to { opacity:0; } }
+
+
+/* Avoid a horizontal jump when the modal temporarily locks scrolling. */
+html { scrollbar-gutter: stable; }

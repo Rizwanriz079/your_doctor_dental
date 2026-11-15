@@ -1,3 +1,4 @@
+import { WelcomeTransitionProvider } from "@/components/public/welcome-transition";
 import { WelcomeIntro } from "@/components/public/welcome-intro";
 import { ExperienceTools } from "@/components/public/experience-tools";
 import { SiteFooter } from "@/components/public/site-footer";
@@ -8,6 +9,7 @@ import { getPatient } from "@/lib/patient";
 export default async function PublicLayout({ children }: LayoutProps<"/">) {
   const [settings, patient] = await Promise.all([getSettings(), getPatient()]);
   return (
+    <WelcomeTransitionProvider>
     <div className="clinic-public flex min-h-dvh flex-col overflow-x-clip">
       <WelcomeIntro clinicName={settings.clinic_name} />
       <SiteHeader clinicName={settings.clinic_name} logoPath={settings.logo_path} phone={settings.phone}
@@ -19,5 +21,6 @@ export default async function PublicLayout({ children }: LayoutProps<"/">) {
       <SiteFooter settings={settings} />
       <ExperienceTools phone={settings.phone} />
     </div>
+    </WelcomeTransitionProvider>
   );
 }

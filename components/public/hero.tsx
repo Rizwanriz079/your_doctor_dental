@@ -1,5 +1,6 @@
 "use client";
 
+import { useWelcomeTransition } from "./welcome-transition";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowDown, ArrowUpRight, CalendarCheck, ShieldCheck, Sparkles } from "lucide-react";
@@ -10,8 +11,9 @@ import type { Benefit } from "@/lib/types";
 
 type Props = { eyebrow: string; heading: string; text: string; imageUrl: string | null; highlights: Benefit[]; categories: string[] };
 export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories }: Props) {
+  const { ready } = useWelcomeTransition();
   const reduce = useSafeReducedMotion();
-  const enter = (delay: number) => ({initial: {opacity: 0, y: reduce ? 0 : 28}, animate: {opacity: 1, y: 0}, transition: {duration: reduce ? 0 : .75, delay: reduce ? 0 : delay}});
+  const enter = (delay: number) => ({initial: {opacity: 0, y: reduce ? 0 : 28}, animate: {opacity: ready ? 1 : 0, y: ready || reduce ? 0 : 28}, transition: {duration: reduce ? 0 : .75, delay: reduce ? 0 : delay}});
   return <section className="clinic-hero" aria-labelledby="hero-title">
     <div className="container-page clinic-hero-grid">
       <div className="clinic-hero-copy">

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useWelcomeTransition } from "./welcome-transition";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { useMotionPreferences } from "@/components/animations/motion-preferences";
 
@@ -10,43 +11,50 @@ let seenInMemory = false;
 
 /** Native dialog provides focus containment, Escape and an inert background. */
 export function WelcomeIntro({ clinicName }: { clinicName: string }) {
+  const { setReady } = useWelcomeTransition();
+  const [leaving, setLeaving] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pathname = usePathname();
   const { paused } = useMotionPreferences();
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog || pathname !== "/" || paused) return;
+    if (!dialog || pathname !== "/" || paused) { setReady(true); return; }
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let seen = seenInMemory;
     try { seen = seen || window.sessionStorage.getItem(SEEN_KEY) === "true"; } catch { /* In-memory fallback. */ }
-    if (seen || preference.matches || window.location.hash) return;
+    if (seen || preference.matches || window.location.hash) { setReady(true); return; }
     // Schedule once after effect setup so React Strict Mode's probe does not consume the intro.
+    let reveal: ReturnType<typeof setTimeout> | undefined;
     let finish: ReturnType<typeof setTimeout> | undefined;
     const previousOverflow = document.body.style.overflow;
     const start = setTimeout(() => {
-      if (!dialog.isConnected || typeof dialog.showModal !== "function") return;
+      if (!dialog.isConnected || typeof dialog.showModal !== "function") { setReady(true); return; }
+      setLeaving(false);
+      setReady(false);
       dialog.showModal();
       document.body.style.overflow = "hidden";
       seenInMemory = true;
       try { window.sessionStorage.setItem(SEEN_KEY, "true"); } catch { /* Session memory fallback. */ }
+      reveal = setTimeout(() => { setReady(true); setLeaving(true); }, 4200);
       finish = setTimeout(() => dialog.close(), 5000);
     }, 0);
-    const onClose = () => { document.body.style.overflow = previousOverflow; document.querySelector(".clinic-hero")?.classList.add("intro-finished"); };
+    const onClose = () => { document.body.style.overflow = previousOverflow; clearTimeout(reveal); clearTimeout(finish); setReady(true); };
     const onPreference = () => { if (preference.matches && dialog.open) dialog.close(); };
     dialog.addEventListener("close", onClose);
     preference.addEventListener("change", onPreference);
     return () => {
       clearTimeout(start);
+      clearTimeout(reveal);
       clearTimeout(finish);
       dialog.removeEventListener("close", onClose);
       preference.removeEventListener("change", onPreference);
       if (dialog.open) dialog.close();
       document.body.style.overflow = previousOverflow;
     };
-  }, [pathname, paused]);
+  }, [pathname, paused, setReady]);
 
-  return <dialog ref={dialogRef} className="welcome-intro welcome-outline" tabIndex={-1} aria-labelledby="welcome-intro-title" aria-describedby="welcome-intro-description">
+  return <dialog ref={dialogRef} className={`welcome-intro welcome-outline${leaving ? " is-leaving" : ""}`} tabIndex={-1} aria-labelledby="welcome-intro-title" aria-describedby="welcome-intro-description">
     <div className="welcome-intro-content">
       <div className="welcome-mark" aria-hidden><LogoMark className="welcome-tooth" /></div>
       <p className="welcome-eyebrow">A little care. A brighter smile.</p>
