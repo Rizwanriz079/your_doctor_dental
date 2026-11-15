@@ -19,7 +19,7 @@ export default async function PublicLayout({ children }: LayoutProps<"/">) {
         {children}
       </main>
       <SiteFooter settings={settings} />
-      <ExperienceTools phone={settings.phone} />
+      <ExperienceTools />
     </div>
     </WelcomeTransitionProvider>
   );

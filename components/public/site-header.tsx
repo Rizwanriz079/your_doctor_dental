@@ -103,8 +103,8 @@ export function SiteHeader({
       >
         Skip to content
       </a>
-      <div className="container-page flex h-full items-center justify-between gap-4">
-        <Logo name={clinicName} logoPath={logoPath} className="max-w-[60%] lg:max-w-none" />
+      <div className="container-page flex h-full items-center justify-between gap-2 sm:gap-4">
+        <Logo name={clinicName} logoPath={logoPath} className="min-w-0 flex-1 lg:flex-none" />
 
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1 rounded-full bg-white/60 p-1 ring-1 ring-navy-100/60 backdrop-blur-md">
@@ -137,11 +137,11 @@ export function SiteHeader({
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <AccountMenu patient={patient} />
-          <ButtonLink href="/book-appointment" variant="primary" size="md" className="hidden sm:inline-flex">
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="hidden lg:block"><AccountMenu patient={patient} /></div>
+          <ButtonLink href="/book-appointment" variant="primary" size="md" className="!px-3 sm:!px-5">
             <CalendarCheck className="size-4" aria-hidden />
-            Book Appointment
+            <span className="sm:hidden">Book</span><span className="hidden sm:inline">Book Appointment</span>
           </ButtonLink>
           <button
             ref={menuButtonRef}

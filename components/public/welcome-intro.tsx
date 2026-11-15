@@ -6,7 +6,7 @@ import { useWelcomeTransition } from "./welcome-transition";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { useMotionPreferences } from "@/components/animations/motion-preferences";
 
-const SEEN_KEY = "dental-welcome-outline-v3-seen";
+const SEEN_KEY = "dental-welcome-spin-v4-seen";
 let seenInMemory = false;
 
 /** Native dialog provides focus containment, Escape and an inert background. */
@@ -36,8 +36,8 @@ export function WelcomeIntro({ clinicName }: { clinicName: string }) {
       document.body.style.overflow = "hidden";
       seenInMemory = true;
       try { window.sessionStorage.setItem(SEEN_KEY, "true"); } catch { /* Session memory fallback. */ }
-      reveal = setTimeout(() => { setReady(true); setLeaving(true); }, 4200);
-      finish = setTimeout(() => dialog.close(), 5000);
+      reveal = setTimeout(() => { setReady(true); setLeaving(true); }, 5500);
+      finish = setTimeout(() => dialog.close(), 6500);
     }, 0);
     const onClose = () => { document.body.style.overflow = previousOverflow; clearTimeout(reveal); clearTimeout(finish); setReady(true); };
     const onPreference = () => { if (preference.matches && dialog.open) dialog.close(); };
@@ -54,9 +54,9 @@ export function WelcomeIntro({ clinicName }: { clinicName: string }) {
     };
   }, [pathname, paused, setReady]);
 
-  return <dialog ref={dialogRef} className={`welcome-intro welcome-outline${leaving ? " is-leaving" : ""}`} tabIndex={-1} aria-labelledby="welcome-intro-title" aria-describedby="welcome-intro-description">
+  return <dialog ref={dialogRef} className={`welcome-intro welcome-spin${leaving ? " is-leaving" : ""}`} tabIndex={-1} aria-labelledby="welcome-intro-title" aria-describedby="welcome-intro-description">
     <div className="welcome-intro-content">
-      <div className="welcome-mark" aria-hidden><LogoMark className="welcome-tooth" /></div>
+      <div className="welcome-mark" aria-hidden><span className="welcome-ring" /><span className="welcome-halo" /><LogoMark className="welcome-tooth" /></div>
       <p className="welcome-eyebrow">A little care. A brighter smile.</p>
       <h2 id="welcome-intro-title">{clinicName}</h2>
       <p id="welcome-intro-description">Welcome to thoughtful dental care.</p>

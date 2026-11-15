@@ -269,3 +269,34 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
 
 /* Avoid a horizontal jump when the modal temporarily locks scrolling. */
 html { scrollbar-gutter: stable; }
+
+/* 6.5-second spinning intro with a shared one-second hero crossfade. */
+.welcome-spin { background:radial-gradient(ellipse at 50% 40%,#fff 0%,#f0faf8 60%,#ddf0ed 100%); padding:1.5rem; }
+.welcome-spin[open] { animation:none; opacity:1; transition:opacity 1s cubic-bezier(.4,0,.2,1); }
+.welcome-spin[open].is-leaving { opacity:0; }
+.welcome-spin .welcome-intro-content { animation:none; }
+.welcome-spin .welcome-mark { perspective:700px; margin-bottom:2rem; }
+.welcome-spin .welcome-tooth { animation:welcome-spin-settle 4.8s cubic-bezier(.2,.05,.15,1) both; }
+.welcome-spin .welcome-tooth path { stroke-dasharray:none; stroke-dashoffset:0; animation:none; }
+.welcome-spin .welcome-ring { animation:clinic-spin 4.8s cubic-bezier(.2,.05,.15,1) both; box-shadow:none; border-width:1px; }
+.welcome-halo { position:absolute; inset:-12%; border:1px solid #b6ddd7; border-radius:50%; animation:welcome-halo 4.8s ease-out both; }
+.welcome-spin .welcome-eyebrow { opacity:0; animation:outline-appear .8s ease-out 1.3s forwards; }
+.welcome-spin h2 { opacity:0; animation:outline-appear .9s ease-out 2.1s forwards; }
+.welcome-spin #welcome-intro-description { opacity:0; animation:outline-appear .8s ease-out 2.8s forwards; }
+@keyframes welcome-spin-settle { 0% { transform:rotateY(-540deg) scale(.5); opacity:0; } 20% { opacity:1; } 80% { transform:rotateY(0deg) scale(1.03); } 100% { transform:rotateY(0deg) scale(1); opacity:1; } }
+@keyframes welcome-halo { from { transform:scale(.7) rotate(-80deg); opacity:0; } to { transform:scale(1) rotate(0); opacity:1; } }
+@media (max-width:639px) {
+  .clinic-public header { background:rgb(255 255 255 / .97); }
+  .clinic-public header .container-page { width:calc(100% - 1.5rem); }
+  .clinic-public header .container-page > a span:last-child { font-size:1rem; }
+  .clinic-public .clinic-hero-actions { align-items:stretch; }
+  .clinic-public .clinic-hero-actions > a:first-child { width:100%; justify-content:center; }
+  .clinic-public .clinic-hero-actions > a:last-child { margin-inline:auto; }
+  .clinic-hero-note { align-items:flex-start; line-height:1.6; }
+  .clinic-hero-note svg { flex-shrink:0; }
+  .clinic-hero-bottom { flex-direction:column; align-items:flex-start; gap:.75rem; font-size:.6rem; }
+  .clinic-public main section.py-18 { padding-block:3rem; }
+  .clinic-public .care-card > div:last-of-type { padding:1.25rem; }
+  .clinic-public footer { padding-bottom:max(1.5rem,env(safe-area-inset-bottom)); }
+}
+@media (max-width:359px) { .clinic-public header .container-page { gap:.35rem; } .clinic-public header .container-page > a { gap:.3rem; } }
