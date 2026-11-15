@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { useMotionPreferences } from "@/components/animations/motion-preferences";
 
-const SEEN_KEY = "dental-welcome-seen";
+const SEEN_KEY = "dental-welcome-v2-seen";
 let seenInMemory = false;
 
 /** Native dialog provides focus containment, Escape and an inert background. */
@@ -22,7 +22,6 @@ export function WelcomeIntro({ clinicName }: { clinicName: string }) {
     let seen = seenInMemory;
     try { seen = seen || window.sessionStorage.getItem(SEEN_KEY) === "true"; } catch { /* In-memory fallback. */ }
     if (seen || preference.matches || window.location.hash) return;
-    try { if (window.localStorage.getItem("dental-motion-paused") === "true") return; } catch { /* Preference context remains available. */ }
     // Schedule once after effect setup so React Strict Mode's probe does not consume the intro.
     let finish: ReturnType<typeof setTimeout> | undefined;
     const previousOverflow = document.body.style.overflow;
@@ -32,9 +31,9 @@ export function WelcomeIntro({ clinicName }: { clinicName: string }) {
       document.body.style.overflow = "hidden";
       seenInMemory = true;
       try { window.sessionStorage.setItem(SEEN_KEY, "true"); } catch { /* Session memory fallback. */ }
-      finish = setTimeout(() => dialog.close(), 2400);
+      finish = setTimeout(() => dialog.close(), 5000);
     }, 0);
-    const onClose = () => { document.body.style.overflow = previousOverflow; };
+    const onClose = () => { document.body.style.overflow = previousOverflow; document.querySelector(".clinic-hero")?.classList.add("intro-finished"); };
     const onPreference = () => { if (preference.matches && dialog.open) dialog.close(); };
     dialog.addEventListener("close", onClose);
     preference.addEventListener("change", onPreference);

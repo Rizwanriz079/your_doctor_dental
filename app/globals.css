@@ -197,3 +197,57 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
   .welcome-progress { margin-top: .75rem; }
 }
 @media (prefers-reduced-motion: reduce) { .welcome-intro { display: none !important; } }
+
+/* Original clinic identity: clear typography, clinical white and deep teal. */
+.clinic-public { background: #fbfdfd; --color-navy-800:#123d43; --color-navy-900:#092b32; --color-brand-600:#087e83; --color-brand-700:#06666d; --color-body:#53696c; }
+.clinic-public header { border-bottom: 1px solid rgb(18 61 67 / .08); }
+.clinic-public .hero-title, .clinic-public .section-title { letter-spacing: -.045em; }
+.clinic-public .section-title { font-weight: 600; }
+.clinic-public .eyebrow { letter-spacing:.18em; font-size:.68rem; }
+.clinic-public .care-card { border-radius: 1rem; box-shadow:none; }
+.clinic-public .care-card:hover { box-shadow:0 20px 40px -20px #087e8340; transform:translateY(-8px); }
+.clinic-public .care-card h3 { font-size:1.25rem; letter-spacing:-.025em; }
+.clinic-public .care-card > div:first-child { border-radius:0; }
+.clinic-public .journey-card { border-radius:1rem; border-top:3px solid #87d8d3; }
+.clinic-public footer { background:#0b343b; color:#c9e2e0; padding-top:3rem; }
+.clinic-public footer h2, .clinic-public footer a, .clinic-public footer p { color:inherit; }
+.clinic-page-intro { border-bottom:1px solid #d9e9e8; }
+.clinic-hero { background:linear-gradient(115deg,#fbfdfd 35%,#eff9f8 100%); overflow:hidden; padding-top:2rem; }
+.clinic-hero-grid { display:grid; grid-template-columns:1.05fr 1fr; gap:4rem; align-items:center; min-height:660px; padding-block:3rem; }
+.clinic-kicker { display:flex; align-items:center; gap:.65rem; font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:#087e83; }
+.clinic-kicker span { width:7px; height:7px; background:#0e9290; border-radius:50%; }
+.clinic-hero h1 { font-size:clamp(3rem,5.6vw,5.6rem); font-weight:500; line-height:1.05; letter-spacing:-.065em; max-width:10ch; margin-top:1.75rem; }
+.clinic-hero-description { max-width:29rem; font-size:1.05rem; line-height:1.8; margin-top:1.75rem; }
+.clinic-hero-actions { display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; margin-top:2rem; }
+.clinic-text-link { display:inline-flex; gap:.5rem; align-items:center; min-height:48px; font-size:.85rem; color:#123d43; font-weight:600; border-bottom:1px solid #a4c8c5; }
+.clinic-hero-note { display:flex; align-items:center; gap:.6rem; margin-top:2.5rem; font-size:.75rem; color:#53696c; }
+.clinic-hero-art { position:relative; min-width:0; aspect-ratio:1; background:radial-gradient(circle,#e7f9f6 0%,#d2efec 55%,#c1e4e2 100%); border-radius:50% 50% 3rem 3rem; display:grid; place-items:center; isolation:isolate; }
+.clinic-tooth { width:85%; height:90%; animation:clinic-float 7s ease-in-out infinite; }
+.clinic-art-label { position:absolute; top:9%; font-size:.55rem; letter-spacing:.19em; color:#2e6d70; font-weight:700; }
+.clinic-art-caption { position:absolute; bottom:5%; font-size:.55rem; letter-spacing:.22em; color:#2e6d70; }
+.clinic-art-card { position:absolute; bottom:15%; left:-5%; display:flex; align-items:center; gap:1rem; max-width:90%; padding:1.1rem 1.5rem; border-radius:1rem; background:#fff; box-shadow:0 15px 40px -20px #123d4360; animation:clinic-float 6s ease-in-out -3s infinite; }
+.clinic-art-card strong { color:#123d43; font-size:.85rem; }
+.clinic-art-card p { font-size:.7rem; margin-top:.2rem; }
+.clinic-art-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:50%; background:#e0f5f0; color:#087e83; }
+.clinic-orbit { position:absolute; inset:10%; border:1px solid #fff9; border-radius:50%; pointer-events:none; animation:clinic-spin 20s linear infinite; }
+.clinic-orbit::after { content:""; position:absolute; top:14%; left:14%; width:9px; height:9px; border-radius:50%; background:#fff; box-shadow:0 0 0 6px #ffffff35; }
+.clinic-orbit-b { inset:2%; animation-direction:reverse; animation-duration:28s; border-style:dashed; border-color:#ffffff65; }
+.clinic-hero-photo { position:relative; width:78%; height:76%; overflow:hidden; border-radius:45% 45% 2rem 2rem; }
+.clinic-hero-bottom { border-top:1px solid #cee4e2; padding-block:1.5rem; display:flex; justify-content:space-between; gap:1rem; font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.clinic-hero-bottom a { display:flex; align-items:center; gap:.75rem; color:#087e83; }
+@keyframes clinic-spin { to { transform:rotate(360deg); } }
+@keyframes clinic-float { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-16px) rotate(2deg); } }
+.intro-finished .clinic-hero-copy { animation:welcome-arrive .8s ease-out both; }
+/* Five seconds total: rotate, settle, then open onto the homepage. */
+.welcome-intro { background:#eaf7f5; }
+.welcome-intro[open] { animation:clinic-intro-exit .7s cubic-bezier(.65,0,.35,1) 4.3s forwards; }
+.welcome-intro::backdrop { background:transparent; }
+.welcome-ring { border:2px solid #96cfca; border-top-color:#087e83; border-bottom-color:#087e83; animation:clinic-spin 2s linear 2; }
+.welcome-tooth { animation:clinic-intro-spin 4.2s cubic-bezier(.3,.05,.2,1) both; }
+.welcome-intro h2 { font-weight:500; color:#123d43; }
+.welcome-progress span { animation-duration:5s; }
+@keyframes clinic-intro-spin { 0% { transform:perspective(600px) rotateY(-540deg) scale(.35); opacity:0; } 65% { transform:perspective(600px) rotateY(0deg) scale(1.08); opacity:1; } 100% { transform:perspective(600px) rotateY(0deg) scale(1); opacity:1; } }
+@keyframes clinic-intro-exit { to { transform:translateY(-100%); } }
+@media (max-width:900px) { .clinic-hero-grid { gap:2rem; min-height:0; } .clinic-hero h1 { font-size:clamp(2.8rem,6.5vw,4.3rem); } }
+@media (max-width:639px) { .clinic-hero { padding-top:0; } .clinic-hero-grid { grid-template-columns:1fr; padding-top:2rem; padding-bottom:2rem; gap:2.5rem; } .clinic-hero h1 { max-width:12ch; font-size:clamp(2.8rem,11vw,4rem); margin-top:1.25rem; } .clinic-hero-description { font-size:.95rem; margin-top:1.25rem; } .clinic-hero-art { width:90%; max-width:420px; margin:auto; } .clinic-hero-actions { gap:1rem; margin-top:1.5rem; } .clinic-hero-note { margin-top:1.5rem; } .clinic-hero-bottom { font-size:.5rem; line-height:1.7; } .clinic-art-card { padding:.8rem 1rem; } .clinic-kicker { font-size:.55rem; letter-spacing:.1em; } }
+@media (prefers-reduced-motion:reduce) { .clinic-tooth,.clinic-orbit,.clinic-art-card,.intro-finished .clinic-hero-copy { animation:none; } .clinic-public .care-card:hover { transform:none; } }

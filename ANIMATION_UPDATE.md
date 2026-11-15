@@ -4,15 +4,15 @@ This update keeps the existing Next.js application, teal/navy branding, Supabase
 
 ## What changed
 
-- Welcome intro: a 2.4-second animated tooth/logo screen on the homepage, once per browser-tab session. Skip intro and Escape dismiss it. Reduced-motion preferences, paused motion and anchor links bypass it. A native dialog contains focus; scrolling is restored when it closes.
-- Hero: animated ambient light, breathing orbit outlines, moving tooth scan contours, sparkle and beacon effects; a shortcut to the treatment finder.
+- Welcome intro: a five-second animated tooth/logo screen on the homepage, once per browser-tab session. Skip intro and Escape dismiss it. Reduced-motion preferences, paused motion and anchor links bypass it. A native dialog contains focus; scrolling is restored when it closes.
+- UI redesign: clinical white, aqua and deep teal; oversized hero typography, an arched tooth display, rotating orbit accents, floating information card, redesigned public cards, section headings and footer. Lightweight CSS transforms provide motion without new dependencies.
 - Pages and cards: page entrance, enhanced scroll reveals, staggered content, interactive card borders and animated service/doctor filter results.
 - Homepage treatment finder: searches active services and filters by the actual catalogue categories. Booking links preselect the chosen service in the existing booking flow. Hidden prices stay hidden. It does not diagnose conditions or recommend treatments.
 - First-visit guide: three steps explaining booking and confirmation, plus an interactive preparation checklist with progress. Checklist selections are temporary and are not submitted or stored.
 - FAQ: expandable keyboard-accessible answers about booking, dentists, appointment status and changes.
 - Navigation helpers: scroll progress, back-to-top control and a mobile call/book bar on the public information pages. The booking bar is hidden during booking and account flows.
 - Booking: a running summary of selected service, dentist, date and time, plus an accessible mobile progress indicator.
-- Motion: a persistent pause/resume preference, operating-system reduced-motion support, and static SVG artwork when effects are disabled. SVG gradient and clip IDs are unique when multiple tooth illustrations appear.
+- Motion: operating-system reduced-motion support. The visible pause control and its old stored preference have been removed. SVG gradient and clip IDs are unique when multiple tooth illustrations appear.
 
 ## Run locally
 

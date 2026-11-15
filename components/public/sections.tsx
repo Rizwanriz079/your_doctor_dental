@@ -65,7 +65,7 @@ export function SectionHeading({
 
 export function PageIntro({ eyebrow, title, description, children }: { eyebrow?: string; title: string; description?: ReactNode; children?: ReactNode }) {
   return (
-    <section className="relative -mt-18 overflow-hidden pb-12 pt-30 sm:pb-16 sm:pt-36">
+    <section className="clinic-page-intro relative -mt-18 overflow-hidden pb-12 pt-30 sm:pb-16 sm:pt-36">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(100%_90%_at_20%_0%,#dff1f5_0%,#eaf5f8_40%,#ffffff_100%)]" aria-hidden />
       <div className="absolute -right-24 -top-10 -z-10 size-80 rounded-full bg-brand-200/30 blur-3xl" aria-hidden />
       <div className="container-page">

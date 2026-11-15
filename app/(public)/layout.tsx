@@ -8,7 +8,7 @@ import { getPatient } from "@/lib/patient";
 export default async function PublicLayout({ children }: LayoutProps<"/">) {
   const [settings, patient] = await Promise.all([getSettings(), getPatient()]);
   return (
-    <div className="flex min-h-dvh flex-col overflow-x-clip">
+    <div className="clinic-public flex min-h-dvh flex-col overflow-x-clip">
       <WelcomeIntro clinicName={settings.clinic_name} />
       <SiteHeader clinicName={settings.clinic_name} logoPath={settings.logo_path} phone={settings.phone}
         patient={patient ? { fullName: patient.fullName, email: patient.email, avatarUrl: patient.avatarUrl } : null}
