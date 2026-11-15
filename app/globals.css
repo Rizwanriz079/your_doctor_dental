@@ -251,3 +251,17 @@ html[data-motion-paused="true"] { scroll-behavior: auto !important; }
 @media (max-width:900px) { .clinic-hero-grid { gap:2rem; min-height:0; } .clinic-hero h1 { font-size:clamp(2.8rem,6.5vw,4.3rem); } }
 @media (max-width:639px) { .clinic-hero { padding-top:0; } .clinic-hero-grid { grid-template-columns:1fr; padding-top:2rem; padding-bottom:2rem; gap:2.5rem; } .clinic-hero h1 { max-width:12ch; font-size:clamp(2.8rem,11vw,4rem); margin-top:1.25rem; } .clinic-hero-description { font-size:.95rem; margin-top:1.25rem; } .clinic-hero-art { width:90%; max-width:420px; margin:auto; } .clinic-hero-actions { gap:1rem; margin-top:1.5rem; } .clinic-hero-note { margin-top:1.5rem; } .clinic-hero-bottom { font-size:.5rem; line-height:1.7; } .clinic-art-card { padding:.8rem 1rem; } .clinic-kicker { font-size:.55rem; letter-spacing:.1em; } }
 @media (prefers-reduced-motion:reduce) { .clinic-tooth,.clinic-orbit,.clinic-art-card,.intro-finished .clinic-hero-copy { animation:none; } .clinic-public .care-card:hover { transform:none; } }
+
+/* Calm five-second outline introduction; no spinner or visible skip control. */
+.welcome-outline { background:#fff; padding:1.5rem; }
+.welcome-outline[open] { animation:outline-exit .8s ease-in-out 4.2s forwards; }
+.welcome-outline .welcome-intro-content { animation:none; }
+.welcome-outline .welcome-mark { margin-bottom:1.75rem; }
+.welcome-outline .welcome-tooth { animation:none; }
+.welcome-outline .welcome-tooth path { stroke:#087e83; stroke-dasharray:240; stroke-dashoffset:240; animation:welcome-draw 2.2s ease-in-out .15s forwards; }
+.welcome-outline .welcome-tooth circle { opacity:0; animation:outline-appear .6s ease-out 1.9s forwards; }
+.welcome-outline .welcome-eyebrow { opacity:0; animation:outline-appear .7s ease-out 1.5s forwards; }
+.welcome-outline h2 { opacity:0; animation:outline-appear .8s ease-out 2s forwards; }
+.welcome-outline #welcome-intro-description { opacity:0; animation:outline-appear .7s ease-out 2.5s forwards; }
+@keyframes outline-appear { to { opacity:1; } }
+@keyframes outline-exit { to { opacity:0; } }

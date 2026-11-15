@@ -54,3 +54,9 @@ On your configured local or Vercel preview environment:
 New: `components/public/care-finder.tsx`, `visit-guide.tsx`, `experience-tools.tsx`, `components/animations/motion-preferences.tsx`, and `app/(public)/template.tsx`.
 
 Updated: public layout/homepage, global styles, hero, tooth illustration, cards, browsers, shared reveals, reduced-motion hook, booking wizard and step indicator.
+
+## Simplified homepage update
+
+The introduction now draws a teal tooth outline, fades in the clinic name and fades out to the homepage at five seconds. The visible Skip intro button, spinning rings and intro progress bar have been removed. Escape and reduced-motion support remain available. It plays once per tab session.
+
+The homepage treatment finder and first-visit guide/checklist have been removed. The hero's Explore treatments anchor now leads directly to the existing services section. FAQs and the existing booking flow remain available.

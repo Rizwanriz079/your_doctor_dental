@@ -29,6 +29,6 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
         <span className="clinic-art-caption">PRECISION MEETS COMFORT</span>
       </motion.div>
     </div>
-    <div className="container-page clinic-hero-bottom"><span>{categories.length ? categories.join("  /  ") : "Preventive / Restorative / Cosmetic"}</span><a href="#care-finder">Find your care <ArrowDown className="size-4" aria-hidden /></a></div>
+    <div className="container-page clinic-hero-bottom"><span>{categories.length ? categories.join("  /  ") : "Preventive / Restorative / Cosmetic"}</span><a href="#treatments">Explore treatments <ArrowDown className="size-4" aria-hidden /></a></div>
   </section>;
 }
