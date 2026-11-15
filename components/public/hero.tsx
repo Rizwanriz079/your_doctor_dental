@@ -40,13 +40,13 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
 
   return (
     <section
-      className="relative -mt-18 overflow-hidden pt-18"
+      className="dental-hero relative -mt-18 overflow-hidden pt-18"
       aria-labelledby="hero-title"
     >
       {/* soft clinical atmosphere */}
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_15%_0%,#dff1f5_0%,#eaf5f8_35%,#f7fbfc_70%,#ffffff_100%)]" aria-hidden />
-      <div className="absolute -right-40 top-10 -z-10 size-[34rem] rounded-full bg-brand-200/35 blur-3xl" aria-hidden />
-      <div className="absolute -left-40 bottom-0 -z-10 size-[26rem] rounded-full bg-navy-100/50 blur-3xl" aria-hidden />
+      <div className="hero-aura absolute -right-40 top-10 -z-10 size-[34rem] rounded-full bg-brand-200/35 blur-3xl" aria-hidden />
+      <div className="hero-aura hero-aura-secondary absolute -left-40 bottom-0 -z-10 size-[26rem] rounded-full bg-navy-100/50 blur-3xl" aria-hidden />
       <div
         className="absolute inset-0 -z-10 opacity-[0.35] [background-image:linear-gradient(rgb(15_139_141/0.07)_1px,transparent_1px),linear-gradient(90deg,rgb(15_139_141/0.07)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(70%_60%_at_60%_40%,black,transparent)]"
         aria-hidden
@@ -78,6 +78,9 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
               </ButtonLink>
             </motion.div>
           </div>
+          <motion.div className="mt-5" {...up(0.38)}>
+            <a href="/#care-finder" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 hover:decoration-brand-700">Find a treatment <ArrowRight className="size-4" aria-hidden /></a>
+          </motion.div>
           {categories.length > 0 && (
             <motion.p className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-navy-500" {...up(0.4)}>
               {categories.join("  /  ")}
@@ -91,6 +94,8 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: duration.slow, ease: easeOut, delay: 0.15 }}
         >
+          <div className="hero-orbit hero-orbit-one" aria-hidden />
+          <div className="hero-orbit hero-orbit-two" aria-hidden />
           {imageUrl ? (
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-lift ring-1 ring-white/60">
               <Image
@@ -115,7 +120,7 @@ export function Hero({ eyebrow, heading, text, imageUrl, highlights, categories 
             <motion.div
               key={h.title}
               className={cn(
-                "absolute flex max-w-[15rem] items-center gap-3 rounded-2xl px-4 py-3 shadow-soft backdrop-blur-md",
+                "hero-highlight absolute flex max-w-[15rem] items-center gap-3 rounded-2xl px-4 py-3 shadow-soft backdrop-blur-md",
                 i === 0
                   ? "left-0 top-[58%] bg-white/80 ring-1 ring-white sm:-left-4"
                   : "right-0 top-[14%] bg-navy-800/85 text-white ring-1 ring-white/10 sm:-right-2",

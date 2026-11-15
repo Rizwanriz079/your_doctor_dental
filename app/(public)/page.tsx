@@ -1,3 +1,5 @@
+import { CareFinder } from "@/components/public/care-finder";
+import { VisitGuide, DentalFaq } from "@/components/public/visit-guide";
 import Image from "next/image";
 import { CheckCircle2, ScanLine } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/animations/reveal";
@@ -44,6 +46,7 @@ export default async function HomePage() {
       <BenefitsStrip benefits={benefits} />
       <StatsStrip stats={stats} />
 
+
       <section className="py-18 sm:py-24" aria-labelledby="services-title">
         <div className="container-page">
           <SectionHeading
@@ -66,6 +69,8 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      <CareFinder services={allServices} currency={settings.currency} />
 
       <section className="bg-sky-soft/60 py-18 sm:py-24" aria-labelledby="why-title">
         <div className="container-page grid items-center gap-12 lg:grid-cols-2">
@@ -152,6 +157,8 @@ export default async function HomePage() {
         </section>
       )}
 
+      <VisitGuide />
+      <DentalFaq />
       <CtaBand phone={settings.phone} />
     </>
   );

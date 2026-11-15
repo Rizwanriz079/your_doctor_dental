@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "motion/react";
+import { useSafeReducedMotion } from "@/lib/use-reduced-motion";
 import { Search, SearchX } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -74,6 +76,7 @@ function NoResults({ onReset }: { onReset: () => void }) {
 }
 
 export function ServicesBrowser({ services, currency }: { services: Service[]; currency: string }) {
+  const reduce = useSafeReducedMotion();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const categories = useMemo(() => Array.from(new Set(services.map((s) => s.category))).sort(), [services]);
@@ -102,9 +105,9 @@ export function ServicesBrowser({ services, currency }: { services: Service[]; c
       {filtered.length > 0 ? (
         <div className="card-grid">
           {filtered.map((s) => (
-            <div key={s.id} className="min-w-0">
+            <motion.div layout={!reduce} key={s.id} initial={{ opacity: 0, y: reduce ? 0 : 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.3 }} className="min-w-0">
               <ServiceCard service={s} currency={currency} />
-            </div>
+            </motion.div>
           ))}
         </div>
       ) : (
@@ -120,6 +123,7 @@ export function ServicesBrowser({ services, currency }: { services: Service[]; c
 }
 
 export function DoctorsBrowser({ doctors }: { doctors: DoctorWithServices[] }) {
+  const reduce = useSafeReducedMotion();
   const [query, setQuery] = useState("");
   const [spec, setSpec] = useState("All");
   const specs = useMemo(() => Array.from(new Set(doctors.map((d) => d.specialization))).sort(), [doctors]);
@@ -149,9 +153,9 @@ export function DoctorsBrowser({ doctors }: { doctors: DoctorWithServices[] }) {
       {filtered.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((d) => (
-            <div key={d.id} className="min-w-0">
+            <motion.div layout={!reduce} key={d.id} initial={{ opacity: 0, y: reduce ? 0 : 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.3 }} className="min-w-0">
               <DoctorCard doctor={d} />
-            </div>
+            </motion.div>
           ))}
         </div>
       ) : (

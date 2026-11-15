@@ -180,6 +180,14 @@ export function BookingWizard(props: Props) {
       ) : (
         <>
           <StepIndicator current={step} onSelect={go} />
+          {service && step > 0 && (
+            <div aria-label="Your appointment selections" className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl bg-brand-50 px-5 py-4 text-sm text-brand-800">
+              <span className="inline-flex items-center gap-2 font-semibold"><Stethoscope className="size-4" aria-hidden />{service.name}</span>
+              {doctor && <span className="inline-flex items-center gap-2"><UserRound className="size-4" aria-hidden />{doctor.full_name}</span>}
+              {date && <span className="inline-flex items-center gap-2"><CalendarDays className="size-4" aria-hidden />{formatDate(date)}</span>}
+              {slot && <span className="inline-flex items-center gap-2"><Clock3 className="size-4" aria-hidden />{formatTime(slot.start)}</span>}
+            </div>
+          )}
           <div className="overflow-hidden rounded-[2rem] bg-white p-5 shadow-soft ring-1 ring-line sm:p-8">
             <div ref={headingRef} className="mb-6 scroll-mt-24">
               <h2 tabIndex={-1} data-step-heading className="text-xl font-bold outline-none sm:text-2xl">
@@ -191,10 +199,10 @@ export function BookingWizard(props: Props) {
               <motion.div
                 key={step}
                 custom={dir}
-                initial={{ opacity: 0, x: dir * 24 }}
+                initial={{ opacity: reduce ? 1 : 0, x: reduce ? 0 : dir * 24 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: dir * -24 }}
-                transition={{ duration: duration.normal, ease: easeOut }}
+                exit={{ opacity: 0, x: reduce ? 0 : dir * -24 }}
+                transition={{ duration: reduce ? 0 : duration.normal, ease: easeOut }}
                 className="min-h-64"
               >
                 {step === 0 && (

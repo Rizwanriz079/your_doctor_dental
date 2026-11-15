@@ -1,5 +1,6 @@
 "use client";
 
+import { useMotionPreferences } from "@/components/animations/motion-preferences";
 import { useReducedMotion } from "motion/react";
 import { useSyncExternalStore } from "react";
 
@@ -11,7 +12,8 @@ const subscribe = () => () => {};
  * The global <MotionConfig reducedMotion="user"> already strips movement either way.
  */
 export function useSafeReducedMotion(): boolean {
+  const { paused } = useMotionPreferences();
   const prefersReduced = useReducedMotion();
   const hydrated = useSyncExternalStore(subscribe, () => true, () => false);
-  return hydrated && Boolean(prefersReduced);
+  return paused || (hydrated && Boolean(prefersReduced));
 }

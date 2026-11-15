@@ -131,3 +131,69 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Public experience: transform/opacity motion with explicit pause controls. */
+html { scroll-behavior: smooth; }
+.page-arrival { animation: page-arrival .45s var(--ease-out-soft) both; }
+@keyframes page-arrival { from { opacity: .65; } to { opacity: 1; } }
+.hero-aura { animation: aura-drift 14s ease-in-out infinite alternate; }
+.hero-aura-secondary { animation-delay: -7s; }
+@keyframes aura-drift { to { transform: translate(30px, 35px) scale(1.08); } }
+.hero-orbit { position: absolute; pointer-events: none; border: 1px solid rgb(15 139 141 / .12); border-radius: 50%; inset: 8% 4%; }
+.hero-orbit-one { animation: orbit-breathe 9s ease-in-out infinite alternate; }
+.hero-orbit-two { inset: 16% -2%; transform: rotate(-24deg); border-style: dashed; animation: orbit-breathe 12s ease-in-out -4s infinite alternate-reverse; }
+@keyframes orbit-breathe { to { transform: rotate(12deg) scale(.93); opacity: .35; } }
+.tooth-scan { animation: scan-drift 6s ease-in-out infinite alternate; }
+@keyframes scan-drift { to { transform: translateY(14px); opacity: .4; } }
+.tooth-sparkle { transform-box: fill-box; transform-origin: center; animation: tooth-twinkle 4s ease-in-out infinite; }
+@keyframes tooth-twinkle { 0%,100% { transform: scale(.85) rotate(0deg); opacity: .5; } 50% { transform: scale(1.15) rotate(12deg); opacity: 1; } }
+.tooth-beacon { transform-box: fill-box; transform-origin: center; animation: beacon 3s ease-out infinite; }
+@keyframes beacon { 0% { transform: scale(.65); opacity: .3; } 100% { transform: scale(1.6); opacity: 0; } }
+.care-card { isolation: isolate; }
+.care-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; border: 1px solid transparent; transition: border-color .3s; }
+.care-card:hover::before, .care-card:focus-within::before { border-color: var(--color-brand-300); }
+.journey-card { transition: transform .3s var(--ease-out-soft), box-shadow .3s; }
+@media (hover: hover) and (pointer: fine) {
+  .journey-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+  .dental-hero a:hover svg { transform: translateX(3px); }
+}
+.dental-hero a svg { transition: transform .2s; }
+.mobile-booking-bar { padding-bottom: max(.75rem, env(safe-area-inset-bottom)); }
+html[data-motion-paused="true"] *, html[data-motion-paused="true"] *::before, html[data-motion-paused="true"] *::after {
+  animation: none !important;
+  transition-duration: 0s !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion-paused="true"] { scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .page-arrival, .hero-aura, .hero-orbit, .tooth-scan, .tooth-sparkle, .tooth-beacon { animation: none; }
+  .journey-card:hover, .care-card:hover { transform: none; }
+}
+
+/* Short welcome, sized by viewport and safe areas rather than fixed dimensions. */
+.welcome-intro { position: fixed; inset: 0; margin: 0; width: 100%; max-width: none; height: 100%; height: 100dvh; max-height: none; border: 0; padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem max(5.5rem, env(safe-area-inset-bottom)); overflow-y: auto; color: var(--color-navy-800); background: radial-gradient(ellipse at 50% 35%, #fff 0%, #eaf5f8 55%, #cdebec 100%); }
+.welcome-intro::backdrop { background: #eaf5f8; }
+.welcome-intro[open] { display: grid; place-items: center; }
+.welcome-intro-content { width: min(100%, 34rem); text-align: center; animation: welcome-arrive .7s var(--ease-out-soft) both; }
+.welcome-mark { position: relative; width: clamp(6rem, 25vmin, 11rem); aspect-ratio: 1; margin: 0 auto 1.5rem; display: grid; place-items: center; }
+.welcome-tooth { width: 80%; position: relative; animation: welcome-tooth 1.6s var(--ease-out-soft) both; }
+.welcome-tooth path { stroke-dasharray: 240; stroke-dashoffset: 240; animation: welcome-draw 1.2s ease-out forwards; }
+.welcome-ring { position: absolute; inset: 0; border: 1px solid #9fd7d8; border-radius: 50%; box-shadow: 0 0 0 12px rgb(255 255 255 / .45), 0 0 0 24px rgb(255 255 255 / .2); animation: welcome-ring 2.4s ease-out both; }
+.welcome-eyebrow { font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--color-brand-700); }
+.welcome-intro h2 { margin-top: .75rem; font-size: clamp(2rem, 8vw, 4rem); font-weight: 700; line-height: 1.12; letter-spacing: -.045em; overflow-wrap: anywhere; }
+.welcome-intro #welcome-intro-description { margin-top: .85rem; font-size: clamp(.85rem, 2.5vw, 1rem); color: var(--color-body); }
+.welcome-progress { width: 5rem; height: 3px; overflow: hidden; margin: 1.75rem auto 0; border-radius: 3px; background: #cdebec; }
+.welcome-progress span { display: block; height: 100%; background: var(--color-brand-600); transform-origin: left; animation: welcome-progress 2.4s linear both; }
+.welcome-skip { position: absolute; right: max(1.25rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); display: inline-flex; gap: .5rem; align-items: center; justify-content: center; min-height: 48px; padding: .5rem 1.25rem; border: 1px solid #9fd7d8; border-radius: 999px; background: #fff; font-size: .875rem; font-weight: 600; color: var(--color-brand-700); }
+@keyframes welcome-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes welcome-draw { to { stroke-dashoffset: 0; } }
+@keyframes welcome-tooth { from { transform: scale(.85); } to { transform: scale(1); } }
+@keyframes welcome-ring { from { transform: scale(.8); opacity: 0; } 35%,100% { transform: scale(1); opacity: 1; } }
+@keyframes welcome-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (max-height: 480px) {
+  .welcome-mark { width: 5rem; margin-bottom: .75rem; }
+  .welcome-intro h2 { font-size: 2rem; }
+  .welcome-progress { margin-top: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) { .welcome-intro { display: none !important; } }

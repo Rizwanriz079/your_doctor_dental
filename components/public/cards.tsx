@@ -53,7 +53,7 @@ export function ServiceVisual({ service, className }: { service: Pick<Service, "
 export function ServiceCard({ service, currency }: { service: Service; currency: string }) {
   const price = service.show_price ? formatPrice(service.price, currency) : null;
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift focus-within:shadow-lift">
+    <article className="care-card group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift focus-within:shadow-lift">
       <div className="relative aspect-[16/10] overflow-hidden">
         <ServiceVisual service={service} />
         <span className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-navy-800 backdrop-blur">
@@ -93,7 +93,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorWithServices }) {
   const photo = mediaUrl(doctor.profile_image_path);
   const bookHref = `/book-appointment?doctor=${doctor.id}${doctor.services.length === 1 ? `&service=${doctor.services[0].id}` : ""}`;
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift">
+    <article className="care-card group flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift">
       <div className="relative aspect-[5/4] overflow-hidden bg-gradient-to-br from-brand-50 via-sky-soft to-navy-50">
         {photo ? (
           <Image

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSafeReducedMotion } from "@/lib/use-reduced-motion";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { duration, easeOut } from "@/lib/motion";
@@ -8,17 +9,18 @@ import { STEPS, type StepIndex } from "./types";
 
 /** Progress indicator. Completed steps are buttons so patients can go back and edit. */
 export function StepIndicator({ current, onSelect }: { current: StepIndex; onSelect: (s: StepIndex) => void }) {
+  const reduce = useSafeReducedMotion();
   const progress = (current / (STEPS.length - 1)) * 100;
   return (
     <nav aria-label="Booking progress" className="mb-8">
       <p className="mb-3 text-sm font-semibold text-navy-800 sm:hidden">
         Step {current + 1} of {STEPS.length}: <span className="text-brand-700">{STEPS[current]}</span>
       </p>
-      <div className="relative h-1.5 overflow-hidden rounded-full bg-navy-50 sm:hidden" aria-hidden>
+      <div className="relative h-1.5 overflow-hidden rounded-full bg-navy-50 sm:hidden" role="progressbar" aria-label="Appointment booking progress" aria-valuemin={1} aria-valuemax={STEPS.length} aria-valuenow={current + 1} aria-valuetext={`Step ${current + 1} of ${STEPS.length}: ${STEPS[current]}`}>
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full bg-brand-600"
           animate={{ width: `${Math.max(progress, 6)}%` }}
-          transition={{ duration: duration.medium, ease: easeOut }}
+          transition={{ duration: reduce ? 0 : duration.medium, ease: easeOut }}
         />
       </div>
       <ol className="hidden items-center sm:flex">
@@ -52,7 +54,7 @@ export function StepIndicator({ current, onSelect }: { current: StepIndex; onSel
                     <motion.span
                       layoutId="step-ring"
                       className="absolute -inset-1 rounded-full ring-2 ring-brand-300"
-                      transition={{ duration: duration.normal, ease: easeOut }}
+                      transition={{ duration: reduce ? 0 : duration.normal, ease: easeOut }}
                       aria-hidden
                     />
                   )}
@@ -66,7 +68,7 @@ export function StepIndicator({ current, onSelect }: { current: StepIndex; onSel
                     className="block h-full bg-brand-600"
                     initial={false}
                     animate={{ width: done ? "100%" : "0%" }}
-                    transition={{ duration: duration.medium, ease: easeOut }}
+                    transition={{ duration: reduce ? 0 : duration.medium, ease: easeOut }}
                   />
                 </span>
               )}
